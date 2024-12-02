@@ -2,4 +2,9 @@
 <resources>
     <dimen name="margin_main">16dp</dimen>
     <dimen name="margin_half">8dp</dimen>
+    <dimen name="margin_smallest">2dp</dimen>
+
+    <dimen name="text_size_subtitle">14sp</dimen>
+
+    <dimen name="button_corner_radius">8dp</dimen>
 </resources>
