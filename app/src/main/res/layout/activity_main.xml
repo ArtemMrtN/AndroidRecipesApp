@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/light_blue">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,5 +16,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/margin_half"
+        android:weightSum="2">
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_main"
+            android:layout_marginEnd="2dp"
+            android:text="@string/btn_text_category"
+            style="@style/StyleNavButton"
+            android:backgroundTint="@color/blue"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button2"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_main"
+            android:layout_marginStart="2dp"
+            android:text="@string/btn_featured"
+            app:icon="@drawable/ic_heart_empty"
+            app:iconGravity="end"
+            style="@style/StyleNavButton"
+            android:backgroundTint="@color/red"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
