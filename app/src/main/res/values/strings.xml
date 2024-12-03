@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android Recipes App</string>
+    <string name="btn_text_category">Категории</string>
+    <string name="btn_featured">Избранное</string>
 </resources>
