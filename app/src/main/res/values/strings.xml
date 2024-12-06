@@ -3,6 +3,7 @@
     <string name="btn_text_category">Категории</string>
     <string name="btn_featured">Избранное</string>
 
-    <string name="fragment_list_category">Fragment list category</string>
+    <string name="fragment_list_category">Категории</string>
     <string name="fragment_favorites">Fragment favorites</string>
+    <string name="item_category_title">Заголовок</string>
 </resources>
