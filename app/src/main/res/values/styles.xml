@@ -8,6 +8,12 @@
         <item name="android:textColor">@color/purple</item>
     </style>
 
+    <style name="PlainText">
+        <item name="android:textSize">@dimen/plain_text</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+    </style>
+
     <style name="StyleNavButton" parent="Widget.Material3.Button">
         <item name="android:textAppearance">@style/StyleTitle14</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
