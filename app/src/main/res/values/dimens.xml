@@ -5,9 +5,13 @@
     <dimen name="margin_smallest">2dp</dimen>
 
     <dimen name="text_size_subtitle">14sp</dimen>
+    <dimen name="plain_text">12sp</dimen>
 
     <dimen name="button_corner_radius">8dp</dimen>
     <dimen name="card_corner_radius">8dp</dimen>
 
     <dimen name="title_padding">10dp</dimen>
+
+    <dimen name="category_header_height">224dp</dimen>
+    <dimen name="category_item_image_height">130dp</dimen>
 </resources>
