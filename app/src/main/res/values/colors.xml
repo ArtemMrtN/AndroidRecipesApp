@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="light_blue">#F4FAFF</color>
     <color name="purple">#5F3678</color>
     <color name="blue">#525DC0</color>
     <color name="red">#E13E3E</color>
     <color name="status_bar_color">#F4FAFF</color>
     <color name="navigation_bar_color">#F4FAFF</color>
+    <color name="gray">#666666</color>
 </resources>
