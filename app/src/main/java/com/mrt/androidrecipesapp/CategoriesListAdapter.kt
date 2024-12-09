@@ -3,7 +3,6 @@ package com.mrt.androidrecipesapp
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,9 +12,7 @@ import com.mrt.androidrecipesapp.databinding.ItemCategoryBinding
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        private val binding = ItemCategoryBinding.bind(view)
+    class ViewHolder(binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
 
         val itemCategoryTitle: TextView = binding.itemCategoryTitle
         val itemCategoryDescription: TextView = binding.itemCategoryDescription
@@ -23,10 +20,9 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
 
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.item_category, viewGroup, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
@@ -46,6 +42,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                 null
             }
         viewHolder.itemCategoryImage.setImageDrawable(drawable)
+        viewHolder.itemCategoryImage.contentDescription = "Изображение категории ${category.title}"
 
     }
 
