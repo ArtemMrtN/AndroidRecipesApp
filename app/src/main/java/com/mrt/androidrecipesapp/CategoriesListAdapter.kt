@@ -12,6 +12,16 @@ import com.mrt.androidrecipesapp.databinding.ItemCategoryBinding
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
+    private val itemClickListener: OnItemClickListener? = null
+
+    interface OnItemClickListener {
+        fun onItemClick()
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        val itemClickListener = listener
+    }
+
     class ViewHolder(binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
 
         val itemCategoryTitle: TextView = binding.itemCategoryTitle
@@ -21,7 +31,8 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -42,7 +53,12 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                 null
             }
         viewHolder.itemCategoryImage.setImageDrawable(drawable)
-        viewHolder.itemCategoryImage.contentDescription = "Изображение категории ${category.title}"
+        viewHolder.itemCategoryImage.contentDescription =
+            "${R.string.item_category_image} ${category.title}"
+
+        viewHolder.itemView.setOnClickListener {
+            itemClickListener?.onItemClick()
+        }
 
     }
 
