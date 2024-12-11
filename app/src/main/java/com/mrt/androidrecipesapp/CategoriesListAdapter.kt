@@ -12,14 +12,14 @@ import com.mrt.androidrecipesapp.databinding.ItemCategoryBinding
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
-    private val itemClickListener: OnItemClickListener? = null
+    private var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
         fun onItemClick()
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
-        val itemClickListener = listener
+        this.itemClickListener = listener
     }
 
     class ViewHolder(binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
