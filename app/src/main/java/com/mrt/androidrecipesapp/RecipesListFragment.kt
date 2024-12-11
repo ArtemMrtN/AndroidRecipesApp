@@ -28,9 +28,9 @@ class RecipesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        categoryId = requireArguments().getInt(ARG_CATEGORY_ID)
-        categoryName = requireArguments().getString(ARG_CATEGORY_NAME)
-        categoryImageUrl = requireArguments().getString(ARG_CATEGORY_IMAGE_URL)
+        categoryId = requireArguments().getInt(ArgCategoryConstants.ARG_CATEGORY_ID)
+        categoryName = requireArguments().getString(ArgCategoryConstants.ARG_CATEGORY_NAME)
+        categoryImageUrl = requireArguments().getString(ArgCategoryConstants.ARG_CATEGORY_IMAGE_URL)
 
         binding.recipesListTitle.text = categoryName
         val drawable =
