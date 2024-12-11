@@ -15,7 +15,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
     private var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemClick()
+        fun onItemClick(categoryId: Int)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
@@ -57,7 +57,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
             "${R.string.item_category_image} ${category.title}"
 
         viewHolder.itemView.setOnClickListener {
-            itemClickListener?.onItemClick()
+            itemClickListener?.onItemClick(category.id)
         }
 
     }
