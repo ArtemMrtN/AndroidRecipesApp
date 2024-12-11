@@ -7,4 +7,7 @@
     <string name="fragment_favorites">Fragment favorites</string>
     <string name="item_category_title">Заголовок</string>
     <string name="item_category_description">Рецепты всех популярных видов бургеров</string>
+    <string name="item_category_image">Изображение категории</string>
+
+    <string name="fragment_recipes_list">Бургеры</string>
 </resources>
