@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.mrt.androidrecipesapp.databinding.FragmentListCategoriesBinding
 
 class CategoriesListFragment : Fragment() {
@@ -33,18 +36,30 @@ class CategoriesListFragment : Fragment() {
         val categoriesListAdapter = CategoriesListAdapter(STUB.getCategories())
         binding.rvCategories.adapter = categoriesListAdapter
 
-        categoriesListAdapter.setOnItemClickListener(object : CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick() {
-                openRecipesByCategoryId()
+        categoriesListAdapter.setOnItemClickListener(object :
+            CategoriesListAdapter.OnItemClickListener {
+            override fun onItemClick(categoryId: Int) {
+                openRecipesByCategoryId(categoryId)
             }
         })
     }
 
-    private fun openRecipesByCategoryId() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.mainContainer, RecipesListFragment())
-            .addToBackStack(null)
-            .commit()
+    private fun openRecipesByCategoryId(categoryId: Int) {
+
+        val categoryName = STUB.getCategories().find { it.id == categoryId }?.title ?: TODO()
+        val categoryImageUrl = STUB.getCategories().find { it.id == categoryId }?.imageUrl ?: TODO()
+
+        val bundle = bundleOf(
+            ArgCategoryConstants.ARG_CATEGORY_ID to categoryId,
+            ArgCategoryConstants.ARG_CATEGORY_NAME to categoryName,
+            ArgCategoryConstants.ARG_CATEGORY_IMAGE_URL to categoryImageUrl
+        )
+
+        parentFragmentManager.commit {
+            replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
     }
 
 }
