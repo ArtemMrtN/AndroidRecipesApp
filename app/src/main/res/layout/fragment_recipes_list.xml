@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/title_background"
-            style="@style/StyleTitle14"
+            style="@style/StyleTitle20"
             android:padding="@dimen/title_padding"
             android:layout_marginBottom="@dimen/margin_main"
             android:layout_marginStart="@dimen/margin_main"
@@ -32,5 +32,13 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecipesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_main"
+        tools:listitem="@layout/item_recipes"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </LinearLayout>

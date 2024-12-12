@@ -1,7 +1,7 @@
 package com.mrt.androidrecipesapp
 
 data class Ingredient(
-    val quantity: Double,
+    val quantity: String,
     val unitOfMeasure: String,
     val description: String,
 )
