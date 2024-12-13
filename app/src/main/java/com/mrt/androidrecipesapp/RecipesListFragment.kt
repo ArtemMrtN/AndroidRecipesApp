@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 
 class RecipesListFragment : Fragment() {
@@ -23,14 +25,18 @@ class RecipesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecipesListBinding.inflate(inflater, container, false)
+
+        initRecycler()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        categoryId = requireArguments().getInt(ArgCategoryConstants.ARG_CATEGORY_ID)
-        categoryName = requireArguments().getString(ArgCategoryConstants.ARG_CATEGORY_NAME)
-        categoryImageUrl = requireArguments().getString(ArgCategoryConstants.ARG_CATEGORY_IMAGE_URL)
+        categoryId = requireArguments().getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+        categoryName = requireArguments().getString(CategoriesListFragment.ARG_CATEGORY_NAME)
+        categoryImageUrl =
+            requireArguments().getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
 
         binding.recipesListTitle.text = categoryName
         val drawable =
@@ -47,6 +53,27 @@ class RecipesListFragment : Fragment() {
         binding.recipesListImage.contentDescription =
             "${R.string.item_category_image} $categoryName"
 
+    }
+
+    private fun initRecycler() {
+        categoryId = requireArguments().getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+        val recipesListAdapter = RecipesListAdapter(STUB.getRecipesByCategoryId(categoryId ?: 0))
+        binding.rvRecipesList.adapter = recipesListAdapter
+
+        recipesListAdapter.setOnItemClickListener(object :
+            RecipesListAdapter.OnItemClickListener {
+            override fun onItemClick(recipeId: Int) {
+                openRecipeByRecipeId(recipeId)
+            }
+        })
+    }
+
+    private fun openRecipeByRecipeId(recipeId: Int) {
+        parentFragmentManager.commit {
+            replace<RecipeFragment>(R.id.mainContainer)
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
     }
 
 }

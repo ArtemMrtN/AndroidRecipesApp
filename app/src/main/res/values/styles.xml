@@ -8,6 +8,13 @@
         <item name="android:textColor">@color/purple</item>
     </style>
 
+    <style name="StyleTitle20" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/purple</item>
+    </style>
+
     <style name="PlainText">
         <item name="android:textSize">@dimen/plain_text</item>
         <item name="android:textColor">@color/gray</item>
@@ -17,6 +24,11 @@
     <style name="StyleNavButton" parent="Widget.Material3.Button">
         <item name="android:textAppearance">@style/StyleTitle14</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
+    </style>
+
+    <style name="RecipeItem">
+        <item name="cornerRadius">@dimen/card_corner_radius</item>
+        <item name="backgroundColor">@color/white</item>
     </style>
 
 </resources>

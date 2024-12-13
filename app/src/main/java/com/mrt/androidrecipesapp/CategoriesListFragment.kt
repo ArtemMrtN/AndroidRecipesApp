@@ -50,9 +50,9 @@ class CategoriesListFragment : Fragment() {
         val categoryImageUrl = STUB.getCategories().find { it.id == categoryId }?.imageUrl ?: TODO()
 
         val bundle = bundleOf(
-            ArgCategoryConstants.ARG_CATEGORY_ID to categoryId,
-            ArgCategoryConstants.ARG_CATEGORY_NAME to categoryName,
-            ArgCategoryConstants.ARG_CATEGORY_IMAGE_URL to categoryImageUrl
+            ARG_CATEGORY_ID to categoryId,
+            ARG_CATEGORY_NAME to categoryName,
+            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
         )
 
         parentFragmentManager.commit {
@@ -60,6 +60,12 @@ class CategoriesListFragment : Fragment() {
             setReorderingAllowed(true)
             addToBackStack(null)
         }
+    }
+
+    companion object {
+        const val ARG_CATEGORY_ID = "categoryId"
+        const val ARG_CATEGORY_NAME = "categoryName"
+        const val ARG_CATEGORY_IMAGE_URL = "categoryImageUrl"
     }
 
 }
