@@ -10,5 +10,4 @@
     <string name="item_category_image">Изображение категории</string>
 
     <string name="fragment_recipes_list">Бургеры</string>
-    <string name="fragment_recipe_title">Чизбургер</string>
 </resources>

@@ -23,7 +23,7 @@
             android:id="@+id/recipesItemImage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/recipe_item_image_height"
-            android:background="@drawable/bcg_recipes_list"
+            tools:background="@drawable/img_error"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_half"
-            android:text="@string/fragment_recipe_title" />
+            tools:text="Чизбургер"/>
 
     </LinearLayout>
 
