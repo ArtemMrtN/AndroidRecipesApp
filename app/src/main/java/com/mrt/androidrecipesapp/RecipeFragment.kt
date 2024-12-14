@@ -29,7 +29,7 @@ class RecipeFragment : Fragment() {
             arguments?.getParcelable(RecipesListFragment.ARG_RECIPE, Recipe::class.java)
         } else {
             arguments?.getParcelable(RecipesListFragment.ARG_RECIPE)
-        } ?: TODO()
+        } ?: throw IllegalStateException("arguments is missing")
 
         binding.recipesItemTitle.text = recipe.title
 
