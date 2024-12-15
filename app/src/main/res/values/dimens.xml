@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="margin_main">16dp</dimen>
+    <dimen name="margin_three_fourths">12dp</dimen>
     <dimen name="margin_half">8dp</dimen>
+    <dimen name="margin_one_fourth">4dp</dimen>
     <dimen name="margin_smallest">2dp</dimen>
+    <dimen name="margin_xxs">1dp</dimen>
 
     <dimen name="text_size_title">20sp</dimen>
     <dimen name="text_size_subtitle">14sp</dimen>
