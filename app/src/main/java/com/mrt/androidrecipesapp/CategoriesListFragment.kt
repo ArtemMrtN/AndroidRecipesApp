@@ -46,8 +46,10 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
 
-        val categoryName = STUB.getCategories().find { it.id == categoryId }?.title ?: TODO()
-        val categoryImageUrl = STUB.getCategories().find { it.id == categoryId }?.imageUrl ?: TODO()
+        val categoryName = STUB.getCategories().find { it.id == categoryId }?.title
+            ?: throw IllegalStateException("no find category id")
+        val categoryImageUrl = STUB.getCategories().find { it.id == categoryId }?.imageUrl
+            ?: throw IllegalStateException("no find category id")
 
         val bundle = bundleOf(
             ARG_CATEGORY_ID to categoryId,

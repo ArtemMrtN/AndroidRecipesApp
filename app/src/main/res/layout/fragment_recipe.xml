@@ -15,7 +15,7 @@
             android:id="@+id/recipesItemImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bcg_recipes_list"
+            tools:background="@drawable/bcg_recipes_list"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:padding="@dimen/title_padding"
             android:layout_marginBottom="@dimen/margin_main"
             android:layout_marginStart="@dimen/margin_main"
-            android:text="@string/fragment_recipe_title"
+            tools:text="Бургер"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"  />
 
