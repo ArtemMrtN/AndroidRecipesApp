@@ -46,6 +46,36 @@
             android:layout_marginHorizontal="@dimen/margin_main"
             android:layout_marginTop="@dimen/margin_main"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/margin_main"
+            android:layout_marginVertical="@dimen/margin_six">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_title_servings"
+            style="@style/StyleSubTitleSemiBold"/>
+
+        <TextView
+            android:id="@+id/recipeNumberOfServings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_six"
+            style="@style/StyleSubTitleSemiBold"
+            android:text="@string/recipe_start_text_seek_bar"/>
+
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/recipeSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="1"
+            android:max="5"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIngredients"
             android:layout_width="match_parent"

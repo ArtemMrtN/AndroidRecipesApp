@@ -1,5 +1,6 @@
 package com.mrt.androidrecipesapp
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mrt.androidrecipesapp.databinding.FragmentRecipeBinding
@@ -74,5 +76,22 @@ class RecipeFragment : Fragment() {
         binding.rvMethod.adapter = MethodAdapter(recipe.method)
         binding.rvMethod.addItemDecoration(divider)
 
+        binding.recipeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            @SuppressLint("SetTextI18n")
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                (binding.rvIngredients.adapter as IngredientsAdapter).updateIngredients(seekBar?.progress ?: 1)
+                binding.recipeNumberOfServings.text = (progress.takeIf { it >= 0 } ?: 1).toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
+
     }
+
 }
