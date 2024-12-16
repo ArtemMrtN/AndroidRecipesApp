@@ -9,36 +9,32 @@
 
     <TextView
         android:id="@+id/ingredientDescription"
-        android:layout_width="wrap_content"
+        style="@style/PlainText14"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Творог"
-        style="@style/PlainText14"/>
+        tools:text="Творог" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/ingredientQuantity"
+        style="@style/PlainText14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/ingredientDescription"
+        app:layout_constraintEnd_toStartOf="@+id/ingredientUnitOfMeasure"
+        app:layout_constraintTop_toTopOf="@+id/ingredientDescription"
+        android:layout_marginEnd="@dimen/margin_smallest"
+        tools:text="350" />
+
+    <TextView
+        android:id="@+id/ingredientUnitOfMeasure"
+        style="@style/PlainText14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/ingredientDescription"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ingredientDescription">
-
-        <TextView
-            android:id="@+id/ingredientQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="350"
-            style="@style/PlainText14"/>
-
-        <TextView
-            android:id="@+id/ingredientUnitOfMeasure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="г"
-            style="@style/PlainText14"
-            android:layout_marginStart="@dimen/margin_smallest"/>
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="@+id/ingredientDescription"
+        tools:text="г" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
