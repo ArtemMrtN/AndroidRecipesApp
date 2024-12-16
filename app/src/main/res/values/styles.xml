@@ -15,6 +15,26 @@
         <item name="android:textColor">@color/purple</item>
     </style>
 
+    <style name="StyleSubTitle20">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/dark_purple</item>
+    </style>
+
+    <style name="PlainText14">
+        <item name="android:textSize">@dimen/text_size_subtitle</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+    </style>
+
+    <style name="PlainSmallText14">
+        <item name="android:textSize">@dimen/text_size_subtitle</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+    </style>
+
     <style name="PlainText">
         <item name="android:textSize">@dimen/plain_text</item>
         <item name="android:textColor">@color/gray</item>
@@ -29,6 +49,11 @@
     <style name="RecipeItem">
         <item name="cornerRadius">@dimen/card_corner_radius</item>
         <item name="backgroundColor">@color/white</item>
+    </style>
+
+    <style name="MyDividerStyle">
+        <item name="dividerThickness">@dimen/margin_xxs</item>
+        <item name="dividerColor">@color/light_gray</item>
     </style>
 
 </resources>
