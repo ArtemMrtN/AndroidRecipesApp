@@ -73,6 +73,7 @@
             android:id="@+id/recipeSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/styleSeekBar"
             android:min="1"
             android:max="5"/>
 
