@@ -12,4 +12,6 @@
     <string name="fragment_recipes_list">Бургеры</string>
     <string name="recipes_item_ingredient">Ингредиенты</string>
     <string name="recipes_method_preparation">Способ приготовления</string>
+    <string name="recipe_title_servings">Порции:</string>
+    <string name="recipe_start_text_seek_bar">1</string>
 </resources>
