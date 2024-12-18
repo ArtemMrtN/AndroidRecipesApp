@@ -58,6 +58,18 @@ class RecipeFragment : Fragment() {
         binding.recipesItemImage.setImageDrawable(drawable)
         binding.recipesItemImage.contentDescription = recipe.title
 
+        var isHeartActive = true
+        binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
+        binding.iconFavorites.setOnClickListener {
+
+            if (isHeartActive) {
+                binding.iconFavorites.setImageResource(R.drawable.ic_heart)
+            } else {
+                binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
+            }
+            isHeartActive = !isHeartActive
+        }
+
     }
 
     private fun initRecycler(recipe: Recipe) {

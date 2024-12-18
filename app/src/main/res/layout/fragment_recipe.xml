@@ -36,6 +36,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Бургер" />
 
+            <ImageButton
+                android:id="@+id/iconFavorites"
+                android:layout_width="@dimen/size_heart"
+                android:layout_height="@dimen/size_heart"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_main"
+                android:layout_marginEnd="@dimen/margin_main"
+                android:background="?attr/selectableItemBackground"
+                tools:background="@drawable/ic_heart" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
