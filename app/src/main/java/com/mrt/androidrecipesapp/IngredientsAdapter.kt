@@ -7,11 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mrt.androidrecipesapp.databinding.ItemIngrediensBinding
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 class IngredientsAdapter(private var dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
-        private var quantity: Int = 1
+        private var portions: Int = 1
 
     class ViewHolder(binding: ItemIngrediensBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -31,7 +32,10 @@ class IngredientsAdapter(private var dataSet: List<Ingredient>) :
         val recipeIngredient = dataSet[position]
 
         val adjustedQuantity = recipeIngredient.quantity.toBigDecimalOrNull()?.let {
-            (it * BigDecimal(quantity)).stripTrailingZeros().toPlainString()
+            (it * BigDecimal(portions))
+                .setScale(1, RoundingMode.HALF_UP)
+                .stripTrailingZeros()
+                .toPlainString()
         } ?: "-"
 
         holder.ingredientDescription.text = recipeIngredient.description
@@ -44,7 +48,7 @@ class IngredientsAdapter(private var dataSet: List<Ingredient>) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateIngredients(progress: Int) {
-        quantity = progress
+        portions = progress
         notifyDataSetChanged()
     }
 }
