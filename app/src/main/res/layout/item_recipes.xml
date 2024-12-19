@@ -10,7 +10,7 @@
     android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardCornerRadius="@dimen/margin_half"
     app:rippleColor="@color/black"
     tools:context=".RecipeFragment">
 

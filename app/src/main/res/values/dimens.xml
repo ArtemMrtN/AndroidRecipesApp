@@ -13,19 +13,13 @@
     <dimen name="text_size_subtitle">14sp</dimen>
     <dimen name="plain_text">12sp</dimen>
 
-    <dimen name="button_corner_radius">8dp</dimen>
-    <dimen name="card_corner_radius">8dp</dimen>
-
-    <dimen name="seek_bar_progress_corner_radius">4dp</dimen>
-    <dimen name="seek_bar_thumb_corner_radius">2dp</dimen>
-
     <dimen name="title_padding">10dp</dimen>
 
     <dimen name="category_header_height">224dp</dimen>
     <dimen name="category_item_image_height">130dp</dimen>
     <dimen name="recipe_item_image_height">100dp</dimen>
 
-    <dimen name="seek_bar_progress_height">16dp</dimen>
     <dimen name="seek_bar_thumb_height">30dp</dimen>
-    <dimen name="seek_bar_thumb_width">8dp</dimen>
+
+    <dimen name="size_heart">40dp</dimen>
 </resources>
