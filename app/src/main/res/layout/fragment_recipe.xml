@@ -29,10 +29,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_main"
+                android:layout_marginEnd="@dimen/margin_main"
                 android:layout_marginBottom="@dimen/margin_main"
                 android:background="@drawable/title_background"
                 android:padding="@dimen/title_padding"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Бургер" />
 
@@ -40,12 +44,14 @@
                 android:id="@+id/iconFavorites"
                 android:layout_width="@dimen/size_heart"
                 android:layout_height="@dimen/size_heart"
+                android:padding="@dimen/margin_one_fourth"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="@dimen/margin_main"
                 android:layout_marginEnd="@dimen/margin_main"
                 android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/favorites_button_description"
                 tools:background="@drawable/ic_heart" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
