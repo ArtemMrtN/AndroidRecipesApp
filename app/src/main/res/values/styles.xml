@@ -22,6 +22,12 @@
         <item name="android:textColor">@color/dark_purple</item>
     </style>
 
+    <style name="StyleText16">
+        <item name="android:textSize">@dimen/text_size_subtitle_semi</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
     <style name="StyleSubTitleSemiBold">
         <item name="android:textSize">@dimen/text_size_subtitle_semi</item>
         <item name="fontFamily">@font/montserrat_semi_bold</item>

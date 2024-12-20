@@ -10,9 +10,11 @@
     <string name="item_category_image">Изображение категории</string>
 
     <string name="fragment_recipes_list">Бургеры</string>
+    <string name="fragment_favorites_title">Избранное</string>
     <string name="recipes_item_ingredient">Ингредиенты</string>
     <string name="recipes_method_preparation">Способ приготовления</string>
     <string name="recipe_title_servings">Порции:</string>
     <string name="recipe_start_text_seek_bar">1</string>
     <string name="favorites_button_description">To favorites</string>
+    <string name="text_empty_favorites_list">Вы еще не добавили ни одного рецепта в избранное</string>
 </resources>

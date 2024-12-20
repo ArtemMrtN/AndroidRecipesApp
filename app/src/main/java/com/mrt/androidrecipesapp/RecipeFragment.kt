@@ -105,7 +105,7 @@ class RecipeFragment : Fragment() {
                 (binding.rvIngredients.adapter as IngredientsAdapter).updateIngredients(
                     seekBar?.progress ?: 1
                 )
-                binding.recipeNumberOfServings.text = (progress.takeIf { it >= 0 } ?: 1).toString()
+                binding.recipeNumberOfServings.text = progress.toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -119,17 +119,22 @@ class RecipeFragment : Fragment() {
     }
 
     private fun saveFavorites(id: Set<String>) {
-        val sharedPrefs = requireActivity().getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val sharedPrefs = requireActivity().getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
         sharedPrefs.edit()
-            .putStringSet("favorites_id", id)
+            .putStringSet(FAVORITES_ID, id)
             .apply()
     }
 
     private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = requireActivity().getSharedPreferences("favorites", Context.MODE_PRIVATE)
-        val storedSet = sharedPrefs.getStringSet("favorites_id", emptySet()) ?: emptySet()
+        val sharedPrefs = requireActivity().getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
+        val storedSet = sharedPrefs.getStringSet(FAVORITES_ID, emptySet()) ?: emptySet()
 
         return HashSet(storedSet)
+    }
+
+    companion object {
+        const val FAVORITES = "favorites"
+        const val FAVORITES_ID = "favorites_id"
     }
 
 }
