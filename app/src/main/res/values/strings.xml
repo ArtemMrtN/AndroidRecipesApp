@@ -14,4 +14,5 @@
     <string name="recipes_method_preparation">Способ приготовления</string>
     <string name="recipe_title_servings">Порции:</string>
     <string name="recipe_start_text_seek_bar">1</string>
+    <string name="favorites_button_description">To favorites</string>
 </resources>
