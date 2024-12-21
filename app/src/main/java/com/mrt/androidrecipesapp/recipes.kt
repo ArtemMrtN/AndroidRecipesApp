@@ -249,4 +249,12 @@ object STUB {
     fun getRecipeById(recipeId: Int): Recipe? {
         return burgerRecipes.find { it.id == recipeId }
     }
+
+    fun getRecipesByIds(id: Set<String>): List<Recipe> {
+        val recipes: MutableList<Recipe> = mutableListOf()
+        for (i in id) {
+            burgerRecipes.find { it.id == i.toIntOrNull()}?.let { recipes.add(it) }
+        }
+        return recipes
+    }
 }
