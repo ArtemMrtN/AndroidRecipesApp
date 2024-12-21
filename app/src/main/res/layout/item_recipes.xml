@@ -12,7 +12,7 @@
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/margin_half"
     app:rippleColor="@color/black"
-    tools:context=".RecipeFragment">
+    tools:context=".ui.RecipeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

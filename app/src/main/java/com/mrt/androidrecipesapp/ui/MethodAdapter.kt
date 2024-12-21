@@ -1,4 +1,4 @@
-package com.mrt.androidrecipesapp
+package com.mrt.androidrecipesapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

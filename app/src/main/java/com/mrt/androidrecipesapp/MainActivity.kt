@@ -6,6 +6,8 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.mrt.androidrecipesapp.databinding.ActivityMainBinding
+import com.mrt.androidrecipesapp.ui.CategoriesListFragment
+import com.mrt.androidrecipesapp.ui.FavoritesFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null

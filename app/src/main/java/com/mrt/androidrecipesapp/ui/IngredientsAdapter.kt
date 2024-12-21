@@ -1,10 +1,11 @@
-package com.mrt.androidrecipesapp
+package com.mrt.androidrecipesapp.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mrt.androidrecipesapp.model.Ingredient
 import com.mrt.androidrecipesapp.databinding.ItemIngrediensBinding
 import java.math.BigDecimal
 import java.math.RoundingMode

@@ -1,4 +1,4 @@
-package com.mrt.androidrecipesapp
+package com.mrt.androidrecipesapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.mrt.androidrecipesapp.R
+import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.databinding.FragmentRecipeBinding
 
 class RecipeFragment : Fragment() {
