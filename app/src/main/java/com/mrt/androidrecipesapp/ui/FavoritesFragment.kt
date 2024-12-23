@@ -1,4 +1,4 @@
-package com.mrt.androidrecipesapp
+package com.mrt.androidrecipesapp.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -6,10 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import com.mrt.androidrecipesapp.RecipeFragment.Companion.FAVORITES
-import com.mrt.androidrecipesapp.RecipeFragment.Companion.FAVORITES_ID
+import com.mrt.androidrecipesapp.R
+import com.mrt.androidrecipesapp.model.Recipe
+import com.mrt.androidrecipesapp.data.STUB
+import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
+import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment : Fragment() {
@@ -23,12 +27,12 @@ class FavoritesFragment : Fragment() {
     ): View {
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
 
-        initRecycler()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        initRecycler()
 
     }
 
@@ -53,7 +57,7 @@ class FavoritesFragment : Fragment() {
     private fun openRecipeByRecipeId(recipeId: Int) {
 
         val recipe: Recipe? = STUB.getRecipeById(recipeId)
-        val bundle = Bundle().apply { putParcelable(ARG_RECIPE, recipe) }
+        val bundle = bundleOf(ARG_RECIPE to recipe)
 
         parentFragmentManager.commit {
             replace<RecipeFragment>(R.id.mainContainer, args = bundle)

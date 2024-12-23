@@ -1,4 +1,4 @@
-package com.mrt.androidrecipesapp
+package com.mrt.androidrecipesapp.ui
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -9,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.mrt.androidrecipesapp.R
+import com.mrt.androidrecipesapp.model.Recipe
+import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 
 class RecipesListFragment : Fragment() {

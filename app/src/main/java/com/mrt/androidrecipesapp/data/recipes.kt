@@ -1,4 +1,8 @@
-package com.mrt.androidrecipesapp
+package com.mrt.androidrecipesapp.data
+
+import com.mrt.androidrecipesapp.model.Category
+import com.mrt.androidrecipesapp.model.Ingredient
+import com.mrt.androidrecipesapp.model.Recipe
 
 object STUB {
     private val category: List<Category> =
