@@ -8,19 +8,19 @@ import com.mrt.androidrecipesapp.model.Recipe
 
 class RecipeViewModel : ViewModel() {
 
-    private val _state = MutableLiveData<RecipeState>()
+    private var _state = MutableLiveData(RecipeState())
     val state: LiveData<RecipeState> get() = _state
 
     init {
 
         Log.i("!!!", "New state")
 
-        _state.value = RecipeState(isFavorites = true)
+        _state = MutableLiveData(RecipeState().copy(isFavorites = true))
     }
 
     data class RecipeState(
         val recipes: List<Recipe> = emptyList(),
-        val quantity: String? = null,
+        val quantity: Int? = null,
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
     )
