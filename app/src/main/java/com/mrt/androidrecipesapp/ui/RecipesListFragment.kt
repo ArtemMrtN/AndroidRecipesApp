@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 
@@ -73,8 +72,7 @@ class RecipesListFragment : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
 
-        val recipe: Recipe? = STUB.getRecipeById(recipeId)
-        val bundle = Bundle().apply { putParcelable(ARG_RECIPE, recipe) }
+        val bundle = Bundle().apply { putInt(RECIPE_ID, recipeId) }
 
         parentFragmentManager.commit {
             replace<RecipeFragment>(R.id.mainContainer, args = bundle)
@@ -84,7 +82,7 @@ class RecipesListFragment : Fragment() {
     }
 
     companion object {
-        const val ARG_RECIPE = "arg recipe"
+        const val RECIPE_ID = "recipe id"
     }
 
 }
