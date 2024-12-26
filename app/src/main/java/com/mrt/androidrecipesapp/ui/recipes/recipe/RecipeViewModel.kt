@@ -20,7 +20,7 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
 
         Log.i("!!!", "New state")
 
-        _state = MutableLiveData(RecipeState().copy(isFavorites = true))
+        _state.value = _state.value?.copy(isFavorites = true)
     }
 
     data class RecipeState(
@@ -34,10 +34,9 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
     fun loadRecipe(recipeId: Int): Recipe {
         val recipe = STUB.getRecipeById(recipeId)
             ?: throw IllegalStateException("Recipe with ID $recipeId not found")
-        _state = MutableLiveData(RecipeState().copy(
+        _state.value = _state.value?.copy(
             isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
             portionsCount = 1
-        )
         )
         return recipe
         TODO("load from network")
@@ -55,16 +54,14 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
 
         if (favorites.any { it.toIntOrNull() == recipeId }) {
             favorites.remove(recipeId.toString())
-            _state = MutableLiveData(RecipeState().copy(
-                isFavorites = false
-            )
-            )
+            _state.value = _state.value?.copy(isFavorites = false)
+//            _state = _state.copy(
+//                isFavorites = false
+//            )
+//            )
         } else {
             favorites.add(recipeId.toString())
-            _state = MutableLiveData(RecipeState().copy(
-                isFavorites = true
-            )
-            )
+            _state.value = _state.value?.copy(isFavorites = true)
         }
 
         saveFavorites(favorites)
