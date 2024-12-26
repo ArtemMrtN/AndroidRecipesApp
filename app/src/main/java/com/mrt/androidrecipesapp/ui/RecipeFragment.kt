@@ -46,6 +46,12 @@ class RecipeFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             Log.i("!!!", "isFavorite: ${state.isFavorites}")
+
+            if (state.isFavorites) {
+                binding.iconFavorites.setImageResource(R.drawable.ic_heart)
+            } else {
+                binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
+            }
         }
 
         binding.recipesItemTitle.text = recipe.title
@@ -63,26 +69,16 @@ class RecipeFragment : Fragment() {
         binding.recipesItemImage.setImageDrawable(drawable)
         binding.recipesItemImage.contentDescription = recipe.title
 
-        val favoritesId = viewModel.getFavorites()
-
-        if (favoritesId.any { it.toIntOrNull() == recipe.id }) {
-            binding.iconFavorites.setImageResource(R.drawable.ic_heart)
-        } else {
-            binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
-        }
-
         binding.iconFavorites.setOnClickListener {
 
-            if (favoritesId.any { it.toIntOrNull() == recipe.id }) {
-                binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
-                favoritesId.remove(recipe.id.toString())
-            } else {
-                binding.iconFavorites.setImageResource(R.drawable.ic_heart)
-                favoritesId.add(recipe.id.toString())
+            viewModel.onFavoritesClicked(recipe.id)
+            viewModel.state.observe(viewLifecycleOwner) { state ->
+                if (state.isFavorites) {
+                    binding.iconFavorites.setImageResource(R.drawable.ic_heart)
+                } else {
+                    binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
+                }
             }
-            viewModel.saveFavorites(favoritesId)
-
-            viewModel.onFavoritesClicked(favoritesId.any { it.toIntOrNull() == recipe.id })
         }
 
     }

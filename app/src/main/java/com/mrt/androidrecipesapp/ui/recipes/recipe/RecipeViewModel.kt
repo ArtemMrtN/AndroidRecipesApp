@@ -50,14 +50,27 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         return HashSet(storedSet)
     }
 
-    fun onFavoritesClicked(status: Boolean) {
-        _state = MutableLiveData(RecipeState().copy(
-            isFavorites = status
-        )
-        )
+    fun onFavoritesClicked(recipeId: Int) {
+        val favorites = getFavorites()
+
+        if (favorites.any { it.toIntOrNull() == recipeId }) {
+            favorites.remove(recipeId.toString())
+            _state = MutableLiveData(RecipeState().copy(
+                isFavorites = false
+            )
+            )
+        } else {
+            favorites.add(recipeId.toString())
+            _state = MutableLiveData(RecipeState().copy(
+                isFavorites = true
+            )
+            )
+        }
+
+        saveFavorites(favorites)
     }
 
-    fun saveFavorites(id: Set<String>) {
+    private fun saveFavorites(id: Set<String>) {
         val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
         sharedPrefs.edit()
             .putStringSet(FAVORITES_ID, id)

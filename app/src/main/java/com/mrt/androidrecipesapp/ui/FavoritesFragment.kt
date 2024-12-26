@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
@@ -56,7 +57,7 @@ class FavoritesFragment : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
 
-        val bundle = Bundle().apply { putInt(RECIPE_ID, recipeId) }
+        val bundle = bundleOf(RECIPE_ID to recipeId)
 
         parentFragmentManager.commit {
             replace<RecipeFragment>(R.id.mainContainer, args = bundle)
