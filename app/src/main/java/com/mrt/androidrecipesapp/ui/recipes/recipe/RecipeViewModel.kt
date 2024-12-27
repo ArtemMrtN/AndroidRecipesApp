@@ -55,10 +55,6 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         if (favorites.any { it.toIntOrNull() == recipeId }) {
             favorites.remove(recipeId.toString())
             _state.value = _state.value?.copy(isFavorites = false)
-//            _state = _state.copy(
-//                isFavorites = false
-//            )
-//            )
         } else {
             favorites.add(recipeId.toString())
             _state.value = _state.value?.copy(isFavorites = true)

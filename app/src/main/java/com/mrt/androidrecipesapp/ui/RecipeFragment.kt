@@ -72,11 +72,6 @@ class RecipeFragment : Fragment() {
         binding.iconFavorites.setOnClickListener {
 
             viewModel.onFavoritesClicked(recipe.id)
-            if (viewModel.state.value?.isFavorites == true) {
-                binding.iconFavorites.setImageResource(R.drawable.ic_heart)
-            } else {
-                binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
-            }
 
         }
 
