@@ -1,7 +1,6 @@
 package com.mrt.androidrecipesapp.ui
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -52,27 +51,15 @@ class RecipeFragment : Fragment() {
             } else {
                 binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
             }
+            binding.recipesItemImage.setImageDrawable(state.recipeImage)
         }
 
         binding.recipesItemTitle.text = recipe.title
 
-        val drawable =
-            try {
-                Drawable.createFromStream(
-                    view?.context?.assets?.open(recipe.imageUrl),
-                    null
-                )
-            } catch (e: Exception) {
-                Log.e("!!!", "Image not found ${recipe.imageUrl}")
-                null
-            }
-        binding.recipesItemImage.setImageDrawable(drawable)
         binding.recipesItemImage.contentDescription = recipe.title
 
         binding.iconFavorites.setOnClickListener {
-
             viewModel.onFavoritesClicked(recipe.id)
-
         }
 
     }

@@ -2,6 +2,7 @@ package com.mrt.androidrecipesapp.ui.recipes.recipe
 
 import android.app.Application
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -28,15 +29,28 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         val quantity: Int? = null,
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
-        val portionsCount: Int = 1
+        val portionsCount: Int = 1,
+        val recipeImage: Drawable? = null
     )
 
     fun loadRecipe(recipeId: Int): Recipe {
         val recipe = STUB.getRecipeById(recipeId)
             ?: throw IllegalStateException("Recipe with ID $recipeId not found")
+
+        val drawable = try {
+            Drawable.createFromStream(
+                application.applicationContext.assets.open(recipe.imageUrl),
+                null
+            )
+        } catch (e: Exception) {
+            Log.e("!!!", "Image not found ${recipe.imageUrl}")
+            null
+        }
+
         _state.value = _state.value?.copy(
             isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
-            portionsCount = 1
+            portionsCount = 1,
+            recipeImage = drawable
         )
         return recipe
         TODO("load from network")
