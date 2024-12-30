@@ -8,9 +8,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mrt.androidrecipesapp.data.STUB
+import com.mrt.androidrecipesapp.model.Ingredient
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class RecipeViewModel(private val application: Application) : AndroidViewModel(application) {
 
@@ -30,7 +33,9 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
         val portionsCount: Int = 1,
-        val recipeImage: Drawable? = null
+        val recipeImage: Drawable? = null,
+        val ingredients: List<Ingredient> = emptyList(),
+        val baseIngredients: List<Ingredient> = emptyList()
     )
 
     fun loadRecipe(recipeId: Int): Recipe {
@@ -50,7 +55,9 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         _state.value = _state.value?.copy(
             isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
             portionsCount = 1,
-            recipeImage = drawable
+            recipeImage = drawable,
+            ingredients = recipe.ingredients,
+            baseIngredients = recipe.ingredients
         )
         return recipe
         TODO("load from network")
@@ -73,8 +80,27 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
             favorites.add(recipeId.toString())
             _state.value = _state.value?.copy(isFavorites = true)
         }
-
         saveFavorites(favorites)
+    }
+
+    private fun recalculateIngredients(baseIngredients: List<Ingredient>, portions: Int): List<Ingredient> {
+        return baseIngredients.map { ingredient ->
+            val adjustedQuantity = ingredient.quantity.toBigDecimalOrNull()?.let {
+                (it * BigDecimal(portions))
+                    .setScale(1, RoundingMode.HALF_UP)
+                    .stripTrailingZeros()
+                    .toPlainString()
+            } ?: "-"
+            ingredient.copy(quantity = adjustedQuantity)
+        }
+    }
+
+    fun updatePortionsCount(newCount: Int) {
+        val baseIngredients = state.value?.baseIngredients ?: emptyList()
+        _state.value = _state.value?.copy(
+            portionsCount = newCount,
+            ingredients = recalculateIngredients(baseIngredients, newCount)
+        )
     }
 
     private fun saveFavorites(id: Set<String>) {

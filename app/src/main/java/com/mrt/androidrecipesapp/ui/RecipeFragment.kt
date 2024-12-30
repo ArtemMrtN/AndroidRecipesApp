@@ -37,8 +37,6 @@ class RecipeFragment : Fragment() {
 
         initUI(recipe)
 
-        initRecycler(recipe)
-
     }
 
     private fun initUI(recipe: Recipe) {
@@ -52,6 +50,17 @@ class RecipeFragment : Fragment() {
                 binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
             }
             binding.recipesItemImage.setImageDrawable(state.recipeImage)
+
+            binding.recipeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                @SuppressLint("SetTextI18n")
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    viewModel.updatePortionsCount(seekBar?.progress ?: 1)
+                    binding.recipeNumberOfServings.text = progress.toString()
+                }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+            binding.rvIngredients.adapter = IngredientsAdapter(state.ingredients)
         }
 
         binding.recipesItemTitle.text = recipe.title
@@ -61,12 +70,6 @@ class RecipeFragment : Fragment() {
         binding.iconFavorites.setOnClickListener {
             viewModel.onFavoritesClicked(recipe.id)
         }
-
-    }
-
-    private fun initRecycler(recipe: Recipe) {
-
-        binding.rvIngredients.adapter = IngredientsAdapter(recipe.ingredients)
 
         val divider =
             MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
@@ -80,24 +83,6 @@ class RecipeFragment : Fragment() {
 
         binding.rvMethod.adapter = MethodAdapter(recipe.method)
         binding.rvMethod.addItemDecoration(divider)
-
-        binding.recipeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
-            @SuppressLint("SetTextI18n")
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                (binding.rvIngredients.adapter as IngredientsAdapter).updateIngredients(
-                    seekBar?.progress ?: 1
-                )
-                binding.recipeNumberOfServings.text = progress.toString()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-        })
 
     }
 
