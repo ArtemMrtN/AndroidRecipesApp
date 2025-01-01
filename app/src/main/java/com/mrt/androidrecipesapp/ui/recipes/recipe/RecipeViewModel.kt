@@ -12,8 +12,6 @@ import com.mrt.androidrecipesapp.model.Ingredient
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class RecipeViewModel(private val application: Application) : AndroidViewModel(application) {
 
@@ -83,23 +81,9 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         saveFavorites(favorites)
     }
 
-    private fun recalculateIngredients(baseIngredients: List<Ingredient>, portions: Int): List<Ingredient> {
-        return baseIngredients.map { ingredient ->
-            val adjustedQuantity = ingredient.quantity.toBigDecimalOrNull()?.let {
-                (it * BigDecimal(portions))
-                    .setScale(1, RoundingMode.HALF_UP)
-                    .stripTrailingZeros()
-                    .toPlainString()
-            } ?: "-"
-            ingredient.copy(quantity = adjustedQuantity)
-        }
-    }
-
     fun updatePortionsCount(newCount: Int) {
-        val baseIngredients = state.value?.baseIngredients ?: emptyList()
         _state.value = _state.value?.copy(
-            portionsCount = newCount,
-            ingredients = recalculateIngredients(baseIngredients, newCount)
+            portionsCount = newCount
         )
     }
 

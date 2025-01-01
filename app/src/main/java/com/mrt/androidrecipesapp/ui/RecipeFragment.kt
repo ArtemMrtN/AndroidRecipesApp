@@ -39,6 +39,7 @@ class RecipeFragment : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initUI(recipe: Recipe) {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
@@ -51,17 +52,21 @@ class RecipeFragment : Fragment() {
             }
             binding.recipesItemImage.setImageDrawable(state.recipeImage)
 
-            binding.recipeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                @SuppressLint("SetTextI18n")
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    viewModel.updatePortionsCount(seekBar?.progress ?: 1)
-                    binding.recipeNumberOfServings.text = progress.toString()
-                }
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
-            binding.rvIngredients.adapter = IngredientsAdapter(state.ingredients)
+            binding.recipeNumberOfServings.text = state.portionsCount.toString()
+            (binding.rvIngredients.adapter as IngredientsAdapter).updateIngredients(state.portionsCount)
+
         }
+
+        binding.recipeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            @SuppressLint("SetTextI18n")
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                viewModel.updatePortionsCount(progress)
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        binding.rvIngredients.adapter = IngredientsAdapter(recipe.ingredients)
 
         binding.recipesItemTitle.text = recipe.title
 
