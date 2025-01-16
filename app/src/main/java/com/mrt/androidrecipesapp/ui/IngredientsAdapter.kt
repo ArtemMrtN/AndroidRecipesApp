@@ -10,7 +10,7 @@ import com.mrt.androidrecipesapp.databinding.ItemIngrediensBinding
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class IngredientsAdapter(private var dataSet: List<Ingredient>) :
+class IngredientsAdapter(var dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
         private var portions: Int = 1
