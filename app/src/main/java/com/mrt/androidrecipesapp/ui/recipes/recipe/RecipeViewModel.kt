@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mrt.androidrecipesapp.data.STUB
+import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Ingredient
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
@@ -17,6 +18,9 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
 
     private var _state = MutableLiveData(RecipeState())
     val state: LiveData<RecipeState> get() = _state
+
+    private var _stateCategories = MutableLiveData(CategoriesState())
+    val stateCategories: LiveData<CategoriesState> get() = _stateCategories
 
     init {
 
@@ -34,6 +38,10 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         val recipeImage: Drawable? = null,
         val ingredients: List<Ingredient> = emptyList(),
         val baseIngredients: List<Ingredient> = emptyList()
+    )
+
+    data class CategoriesState(
+        val categories: List<Category> = emptyList(),
     )
 
     fun loadRecipe(recipeId: Int): Recipe {
@@ -61,11 +69,35 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         TODO("load from network")
     }
 
+    fun loadRecipesList(categoryId: Int): List<Recipe> {
+        val recipesList = STUB.getRecipesByCategoryId(categoryId)
+
+        _state.value = _state.value?.copy(
+            recipes = recipesList
+        )
+        return recipesList
+    }
+
+    fun loadCategories(): List<Category> {
+        val categories = STUB.getCategories()
+
+        _stateCategories.value = _stateCategories.value?.copy(
+            categories = categories
+        )
+
+        return categories
+    }
+
     fun getFavorites(): MutableSet<String> {
         val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
         val storedSet = sharedPrefs.getStringSet(FAVORITES_ID, emptySet()) ?: emptySet()
 
         return HashSet(storedSet)
+    }
+
+    fun getFavoritesByIds(favoritesId: Set<String>): List<Recipe> {
+        val favoritesList = STUB.getRecipesByIds(favoritesId)
+        return favoritesList
     }
 
     fun onFavoritesClicked(recipeId: Int) {

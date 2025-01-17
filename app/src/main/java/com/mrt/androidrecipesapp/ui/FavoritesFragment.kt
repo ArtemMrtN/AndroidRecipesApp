@@ -10,7 +10,6 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 import com.mrt.androidrecipesapp.ui.RecipesListFragment.Companion.RECIPE_ID
 import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
@@ -39,11 +38,12 @@ class FavoritesFragment : Fragment() {
 
     private fun initRecycler() {
         val favoritesId = viewModel.getFavorites()
+
         if (favoritesId.isEmpty()) {
             binding.emptyTextView.visibility = View.VISIBLE
             binding.rvFavoritesList.visibility = View.GONE
         } else {
-            val favoritesListAdapter = RecipesListAdapter(STUB.getRecipesByIds(favoritesId))
+            val favoritesListAdapter = RecipesListAdapter(viewModel.getFavoritesByIds(favoritesId))
             binding.rvFavoritesList.adapter = favoritesListAdapter
 
             favoritesListAdapter.setOnItemClickListener(object :

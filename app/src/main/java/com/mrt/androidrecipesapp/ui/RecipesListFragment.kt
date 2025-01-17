@@ -9,9 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
+import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
 
 class RecipesListFragment : Fragment() {
 
@@ -21,6 +22,8 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImageUrl: String? = null
+
+    private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,8 +61,8 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        categoryId = requireArguments().getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-        val recipesListAdapter = RecipesListAdapter(STUB.getRecipesByCategoryId(categoryId ?: 0))
+        val recipesList = viewModel.loadRecipesList(arguments?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: 0)
+        val recipesListAdapter = RecipesListAdapter(recipesList)
         binding.rvRecipesList.adapter = recipesListAdapter
 
         recipesListAdapter.setOnItemClickListener(object :

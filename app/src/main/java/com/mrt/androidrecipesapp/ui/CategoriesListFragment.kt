@@ -8,14 +8,18 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentListCategoriesBinding
+import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
 
 class CategoriesListFragment : Fragment() {
 
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
+
+    private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +39,7 @@ class CategoriesListFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        val categoriesListAdapter = CategoriesListAdapter(STUB.getCategories())
+        val categoriesListAdapter = CategoriesListAdapter(viewModel.loadCategories())
         binding.rvCategories.adapter = categoriesListAdapter
 
         categoriesListAdapter.setOnItemClickListener(object :
