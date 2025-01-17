@@ -39,6 +39,17 @@ class RecipeFragment : Fragment() {
 
     }
 
+    class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) :
+        SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            onChangeIngredients(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+    }
+
     @SuppressLint("SetTextI18n")
     private fun initUI(recipe: Recipe) {
 
@@ -57,13 +68,8 @@ class RecipeFragment : Fragment() {
 
         }
 
-        binding.recipeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            @SuppressLint("SetTextI18n")
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                viewModel.updatePortionsCount(progress)
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        binding.recipeSeekBar.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
+            viewModel.updatePortionsCount(progress)
         })
 
         binding.rvIngredients.adapter = IngredientsAdapter(recipe.ingredients)
