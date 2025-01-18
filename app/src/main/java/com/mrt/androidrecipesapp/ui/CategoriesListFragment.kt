@@ -12,14 +12,14 @@ import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentListCategoriesBinding
-import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
+import com.mrt.androidrecipesapp.ui.categories.CategoriesListViewModel
 
 class CategoriesListFragment : Fragment() {
 
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
 
-    private val viewModel: RecipeViewModel by viewModels()
+    private val viewModel: CategoriesListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

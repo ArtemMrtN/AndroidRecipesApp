@@ -12,14 +12,14 @@ import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 import com.mrt.androidrecipesapp.ui.RecipesListFragment.Companion.RECIPE_ID
-import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
+import com.mrt.androidrecipesapp.ui.recipes.favorites.FavoritesViewModel
 
 class FavoritesFragment : Fragment() {
 
     private var _binding:FragmentFavoritesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
 
-    private val viewModel: RecipeViewModel by viewModels()
+    private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
