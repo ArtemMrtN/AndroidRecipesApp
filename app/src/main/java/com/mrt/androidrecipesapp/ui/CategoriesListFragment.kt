@@ -39,8 +39,12 @@ class CategoriesListFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        val categoriesListAdapter = CategoriesListAdapter(viewModel.loadCategories())
+        val categoriesListAdapter = CategoriesListAdapter(emptyList())
         binding.rvCategories.adapter = categoriesListAdapter
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            categoriesListAdapter.updateCategories(state.categories)
+        }
 
         categoriesListAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
@@ -48,6 +52,8 @@ class CategoriesListFragment : Fragment() {
                 openRecipesByCategoryId(categoryId)
             }
         })
+
+        viewModel.loadCategories()
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {

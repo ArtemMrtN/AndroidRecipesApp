@@ -31,7 +31,7 @@ class RecipesListViewModel(private val application: Application) :
         return recipesList
     }
 
-    fun loadCurrentCategory(categoryId: Int): Category {
+    fun loadCurrentCategory(categoryId: Int) {
         val category = STUB.getCategories().find { it.id == categoryId }
         val drawable = try {
             Drawable.createFromStream(
@@ -46,6 +46,5 @@ class RecipesListViewModel(private val application: Application) :
             currentCategory = category,
             categoryImage = drawable,
         )
-        return category ?: throw IllegalStateException("Category with ID $categoryId not found")
     }
 }

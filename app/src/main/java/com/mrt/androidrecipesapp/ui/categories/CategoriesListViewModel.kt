@@ -17,14 +17,12 @@ class CategoriesListViewModel(private val application: Application) :
         val categories: List<Category> = emptyList(),
     )
 
-    fun loadCategories(): List<Category> {
+    fun loadCategories() {
         val categories = STUB.getCategories()
 
         _state.value = _state.value?.copy(
             categories = categories
         )
-
-        return categories
     }
 
 }
