@@ -22,13 +22,12 @@ class RecipesListViewModel(private val application: Application) :
         val categoryImage: Drawable? = null,
     )
 
-    fun loadRecipesList(categoryId: Int): List<Recipe> {
+    fun loadRecipesList(categoryId: Int) {
         val recipesList = STUB.getRecipesByCategoryId(categoryId)
 
         _state.value = _state.value?.copy(
             recipes = recipesList
         )
-        return recipesList
     }
 
     fun loadCurrentCategory(categoryId: Int) {

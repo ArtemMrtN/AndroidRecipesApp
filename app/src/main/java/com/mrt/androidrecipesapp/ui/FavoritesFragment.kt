@@ -45,7 +45,7 @@ class FavoritesFragment : Fragment() {
                 binding.emptyTextView.visibility = View.VISIBLE
                 binding.rvFavoritesList.visibility = View.GONE
             } else {
-                favoritesListAdapter.updateRecipes(viewModel.getFavoritesByIds(state.favoritesId))
+                favoritesListAdapter.updateRecipes(state.recipes)
             }
         }
 

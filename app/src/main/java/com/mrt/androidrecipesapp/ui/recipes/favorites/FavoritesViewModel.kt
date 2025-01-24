@@ -18,6 +18,10 @@ class FavoritesViewModel(private val application: Application) :
 
     init {
         getFavorites()
+
+        if (!state.value?.favoritesId.isNullOrEmpty()) {
+            this.state.value?.favoritesId?.let { getFavoritesByIds(it) }
+        }
     }
 
     data class FavoritesState(
@@ -33,8 +37,10 @@ class FavoritesViewModel(private val application: Application) :
         )
     }
 
-    fun getFavoritesByIds(favoritesId: Set<String>): List<Recipe> {
+    fun getFavoritesByIds(favoritesId: Set<String>) {
         val favoritesList = STUB.getRecipesByIds(favoritesId)
-        return favoritesList
+        _state.value = _state.value?.copy(
+            recipes = favoritesList
+        )
     }
 }

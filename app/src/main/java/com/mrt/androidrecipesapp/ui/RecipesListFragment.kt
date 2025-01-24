@@ -10,7 +10,6 @@ import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
-import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.recipes.recipes_list.RecipesListViewModel
 
 class RecipesListFragment : Fragment() {
@@ -30,27 +29,28 @@ class RecipesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val recipesList = viewModel.loadRecipesList(
+        viewModel.loadRecipesList(
             arguments?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: 0
         )
 
         viewModel.loadCurrentCategory(
             arguments?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: 0
         )
-        initRecycler(recipesList)
+        initRecycler()
+
+    }
+
+    private fun initRecycler() {
+        val recipesListAdapter = RecipesListAdapter(emptyList())
+        binding.rvRecipesList.adapter = recipesListAdapter
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.recipesListTitle.text = state.currentCategory?.title
             binding.recipesListImage.setImageDrawable(state.categoryImage)
             binding.recipesListImage.contentDescription =
                 "${R.string.item_category_image} ${state.currentCategory?.title}"
+            (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(state.recipes)
         }
-
-    }
-
-    private fun initRecycler(recipesList: List<Recipe>) {
-        val recipesListAdapter = RecipesListAdapter(recipesList)
-        binding.rvRecipesList.adapter = recipesListAdapter
 
         recipesListAdapter.setOnItemClickListener(object :
             RecipesListAdapter.OnItemClickListener {
