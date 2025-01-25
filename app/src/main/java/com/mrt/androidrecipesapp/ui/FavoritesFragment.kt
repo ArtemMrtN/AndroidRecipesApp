@@ -10,17 +10,16 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 import com.mrt.androidrecipesapp.ui.RecipesListFragment.Companion.RECIPE_ID
-import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
+import com.mrt.androidrecipesapp.ui.recipes.favorites.FavoritesViewModel
 
 class FavoritesFragment : Fragment() {
 
-    private var _binding:FragmentFavoritesBinding? = null
+    private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
 
-    private val viewModel: RecipeViewModel by viewModels()
+    private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,21 +37,25 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        val favoritesId = viewModel.getFavorites()
-        if (favoritesId.isEmpty()) {
-            binding.emptyTextView.visibility = View.VISIBLE
-            binding.rvFavoritesList.visibility = View.GONE
-        } else {
-            val favoritesListAdapter = RecipesListAdapter(STUB.getRecipesByIds(favoritesId))
-            binding.rvFavoritesList.adapter = favoritesListAdapter
+        val favoritesListAdapter = RecipesListAdapter(emptyList())
+        binding.rvFavoritesList.adapter = favoritesListAdapter
 
-            favoritesListAdapter.setOnItemClickListener(object :
-                RecipesListAdapter.OnItemClickListener {
-                override fun onItemClick(recipeId: Int) {
-                    openRecipeByRecipeId(recipeId)
-                }
-            })
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            if (state.favoritesId.isEmpty()) {
+                binding.emptyTextView.visibility = View.VISIBLE
+                binding.rvFavoritesList.visibility = View.GONE
+            } else {
+                favoritesListAdapter.updateRecipes(state.recipes)
+            }
         }
+
+        favoritesListAdapter.setOnItemClickListener(object :
+            RecipesListAdapter.OnItemClickListener {
+            override fun onItemClick(recipeId: Int) {
+                openRecipeByRecipeId(recipeId)
+            }
+        })
+
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {

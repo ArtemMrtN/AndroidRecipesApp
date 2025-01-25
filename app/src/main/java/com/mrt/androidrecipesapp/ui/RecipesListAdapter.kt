@@ -1,5 +1,6 @@
 package com.mrt.androidrecipesapp.ui
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +12,7 @@ import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.databinding.ItemRecipesBinding
 
-class RecipesListAdapter(private val dataSet: List<Recipe>) :
+class RecipesListAdapter(private var dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
@@ -60,4 +61,10 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
     }
 
     override fun getItemCount() = dataSet.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateRecipes(newRecipes: List<Recipe>) {
+        dataSet = newRecipes
+        notifyDataSetChanged()
+    }
 }
