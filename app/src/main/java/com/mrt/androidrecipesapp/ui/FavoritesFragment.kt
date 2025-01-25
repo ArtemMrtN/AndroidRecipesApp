@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 import com.mrt.androidrecipesapp.ui.RecipesListFragment.Companion.RECIPE_ID
@@ -41,7 +40,7 @@ class FavoritesFragment : Fragment() {
         binding.rvFavoritesList.adapter = favoritesListAdapter
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            if (state.favoritesId.isEmpty()) {
+            if (state.recipes.isEmpty()) {
                 binding.emptyTextView.visibility = View.VISIBLE
                 binding.rvFavoritesList.visibility = View.GONE
             } else {
@@ -61,12 +60,8 @@ class FavoritesFragment : Fragment() {
     private fun openRecipeByRecipeId(recipeId: Int) {
 
         val bundle = bundleOf(RECIPE_ID to recipeId)
+        findNavController().navigate(R.id.recipeFragment, bundle)
 
-        parentFragmentManager.commit {
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
-            setReorderingAllowed(true)
-            addToBackStack(null)
-        }
     }
 
     override fun onDestroyView() {
