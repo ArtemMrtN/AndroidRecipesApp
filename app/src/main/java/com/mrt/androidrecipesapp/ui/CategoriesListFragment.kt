@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentListCategoriesBinding
@@ -68,7 +69,13 @@ class CategoriesListFragment : Fragment() {
             ARG_CATEGORY_IMAGE_URL to categoryImageUrl
         )
 
-        findNavController().navigate(R.id.recipesListFragment, bundle)
+        findNavController().navigate(
+            R.id.action_categoriesListFragment_to_recipesListFragment,
+            bundle,
+            navOptions {
+                launchSingleTop = true
+            }
+        )
 
     }
 

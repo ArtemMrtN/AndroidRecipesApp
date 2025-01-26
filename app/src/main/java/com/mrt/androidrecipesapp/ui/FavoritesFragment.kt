@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 import com.mrt.androidrecipesapp.ui.RecipesListFragment.Companion.RECIPE_ID
@@ -60,7 +61,13 @@ class FavoritesFragment : Fragment() {
     private fun openRecipeByRecipeId(recipeId: Int) {
 
         val bundle = bundleOf(RECIPE_ID to recipeId)
-        findNavController().navigate(R.id.recipeFragment, bundle)
+        findNavController().navigate(
+            R.id.action_favoritesFragment_to_recipeFragment,
+            bundle,
+            navOptions {
+                launchSingleTop = true
+            }
+        )
 
     }
 

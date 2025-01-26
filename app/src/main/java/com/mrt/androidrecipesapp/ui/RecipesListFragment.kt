@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 import com.mrt.androidrecipesapp.ui.recipes.recipes_list.RecipesListViewModel
@@ -63,7 +64,13 @@ class RecipesListFragment : Fragment() {
 
         val bundle = Bundle().apply { putInt(RECIPE_ID, recipeId) }
 
-        findNavController().navigate(R.id.recipeFragment, bundle)
+        findNavController().navigate(
+            R.id.action_recipesListFragment_to_recipeFragment,
+            bundle,
+            navOptions {
+                launchSingleTop = true
+            }
+        )
 
     }
 
