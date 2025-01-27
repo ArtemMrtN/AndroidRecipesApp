@@ -17,27 +17,21 @@ class FavoritesViewModel(private val application: Application) :
     val state: LiveData<FavoritesState> get() = _state
 
     init {
-        getFavorites()
-
-        if (!state.value?.favoritesId.isNullOrEmpty()) {
-            this.state.value?.favoritesId?.let { getFavoritesByIds(it) }
-        }
+        getFavoritesByIds()
     }
 
     data class FavoritesState(
         val recipes: List<Recipe> = emptyList(),
-        val favoritesId: MutableSet<String> = mutableSetOf(),
     )
 
-    fun getFavorites() {
+    fun getFavorites(): HashSet<String> {
         val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
         val storedSet = sharedPrefs.getStringSet(FAVORITES_ID, emptySet()) ?: emptySet()
-        _state.value = _state.value?.copy(
-            favoritesId = HashSet(storedSet)
-        )
+        return HashSet(storedSet)
     }
 
-    fun getFavoritesByIds(favoritesId: Set<String>) {
+    fun getFavoritesByIds() {
+        val favoritesId = getFavorites()
         val favoritesList = STUB.getRecipesByIds(favoritesId)
         _state.value = _state.value?.copy(
             recipes = favoritesList

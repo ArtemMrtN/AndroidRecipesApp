@@ -2,9 +2,8 @@ package com.mrt.androidrecipesapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import androidx.navigation.findNavController
+import androidx.navigation.navOptions
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.ActivityMainBinding
 
@@ -17,25 +16,22 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                add<CategoriesListFragment>(R.id.mainContainer)
-            }
-        }
-
         binding.buttonCategory.setOnClickListener {
-            supportFragmentManager.commit {
-                replace<CategoriesListFragment>(R.id.mainContainer)
-                setReorderingAllowed(true)
-                addToBackStack(null)
-            }
+            findNavController(R.id.mainContainer).navigate(
+                R.id.categoriesListFragment,
+                null,
+                navOptions {
+                    launchSingleTop = true
+                })
         }
         binding.buttonFavorites.setOnClickListener {
-            supportFragmentManager.commit {
-                replace<FavoritesFragment>(R.id.mainContainer)
-                setReorderingAllowed(true)
-                addToBackStack(null)
-            }
+            findNavController(R.id.mainContainer).navigate(
+                R.id.favoritesFragment,
+                null,
+                navOptions {
+                    launchSingleTop = true
+                }
+            )
         }
     }
 }
