@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mrt.androidrecipesapp.R
@@ -33,7 +34,10 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val recipe = viewModel.loadRecipe(arguments?.getInt(RecipesListFragment.RECIPE_ID) ?: 0)
+        val args: RecipeFragmentArgs by navArgs()
+        val recipeId = args.recipeId
+
+        val recipe = viewModel.loadRecipe(recipeId)
 
         initUI(recipe)
 
