@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    id("androidx.navigation.safeargs.kotlin") version "2.8.5" apply false
 }
 
 android {
