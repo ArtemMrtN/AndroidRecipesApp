@@ -17,4 +17,7 @@
     <string name="recipe_start_text_seek_bar">1</string>
     <string name="favorites_button_description">To favorites</string>
     <string name="text_empty_favorites_list">Вы еще не добавили ни одного рецепта в избранное</string>
+
+    <string name="category_with_id">Категория с ID</string>
+    <string name="no_found">не найдена</string>
 </resources>

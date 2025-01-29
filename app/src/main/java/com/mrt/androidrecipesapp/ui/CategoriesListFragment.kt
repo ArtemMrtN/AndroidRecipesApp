@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.mrt.androidrecipesapp.R
@@ -57,28 +56,14 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
 
-        val categoryName = STUB.getCategories().find { it.id == categoryId }?.title
-            ?: throw IllegalStateException("no find category id")
-        val categoryImageUrl = STUB.getCategories().find { it.id == categoryId }?.imageUrl
-            ?: throw IllegalStateException("no find category id")
+        val category = STUB.getCategories().find { it.id == categoryId }
+            ?: throw IllegalArgumentException("${R.string.category_with_id} $categoryId ${R.string.no_found}")
 
-        val bundle = bundleOf(
-            ARG_CATEGORY_ID to categoryId,
-            ARG_CATEGORY_NAME to categoryName,
-            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
-        )
+        val action = CategoriesListFragmentDirections
+            .actionCategoriesListFragmentToRecipesListFragment(category)
 
-        findNavController().navigate(
-            R.id.action_categoriesListFragment_to_recipesListFragment,
-            bundle
-        )
+        findNavController().navigate(action)
 
-    }
-
-    companion object {
-        const val ARG_CATEGORY_ID = "categoryId"
-        const val ARG_CATEGORY_NAME = "categoryName"
-        const val ARG_CATEGORY_IMAGE_URL = "categoryImageUrl"
     }
 
 }
