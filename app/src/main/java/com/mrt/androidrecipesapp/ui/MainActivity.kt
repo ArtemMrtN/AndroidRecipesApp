@@ -1,10 +1,16 @@
 package com.mrt.androidrecipesapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.ActivityMainBinding
+import com.mrt.androidrecipesapp.model.Category
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -14,6 +20,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d("!!!", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
+
+        val thread = Thread {
+            val url = URL("https://recipes.androidsprint.ru/api/category")
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.connect()
+
+            val json = connection.inputStream.bufferedReader().readText()
+
+            val listType = object : TypeToken<List<Category>>() {}.type
+            val categories: List<Category> = Gson().fromJson(json, listType)
+
+            Log.i("!!!", "responseCode: ${connection.responseCode}")
+            Log.i("!!!", "responseMessage: ${connection.responseMessage}")
+            Log.i("!!!", "Body: ${connection.inputStream.bufferedReader().readText()}")
+            Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+
+            categories.forEach { Log.d("!!!", "Category: ${it.id} - ${it.title}") }
+        }
+        thread.start()
 
         val navController = (supportFragmentManager.findFragmentById(R.id.mainContainer) as NavHostFragment).navController
 
