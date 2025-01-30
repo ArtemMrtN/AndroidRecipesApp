@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 import com.mrt.androidrecipesapp.ui.recipes.recipes_list.RecipesListViewModel
@@ -28,13 +29,11 @@ class RecipesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel.loadRecipesList(
-            arguments?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: 0
-        )
+        val args: CategoriesListFragmentArgs by navArgs()
+        val categoryId = args.Category.id
 
-        viewModel.loadCurrentCategory(
-            arguments?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: 0
-        )
+        viewModel.loadRecipesList(categoryId)
+        viewModel.loadCurrentCategory(categoryId)
         initRecycler()
 
     }
