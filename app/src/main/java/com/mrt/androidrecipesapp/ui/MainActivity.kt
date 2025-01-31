@@ -10,8 +10,9 @@ import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.ActivityMainBinding
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -29,32 +30,45 @@ class MainActivity : AppCompatActivity() {
         Log.d("!!!", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
         val thread = Thread {
-            val url = URL("https://recipes.androidsprint.ru/api/category")
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.connect()
 
-            val json = connection.inputStream.bufferedReader().readText()
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build()
+
+            val request: Request = Request.Builder()
+                .url("https://recipes.androidsprint.ru/api/category")
+                .build()
+
+            val json = client.newCall(request).execute().body?.string()
 
             val listType = object : TypeToken<List<Category>>() {}.type
             val categories: List<Category> = Gson().fromJson(json, listType)
 
-            Log.i("!!!", "responseCode: ${connection.responseCode}")
-            Log.i("!!!", "responseMessage: ${connection.responseMessage}")
-            Log.i("!!!", "Body: ${connection.inputStream.bufferedReader().readText()}")
-            Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-
             categories.forEach { Log.d("!!!", "Category: ${it.id} - ${it.title}") }
-
             val categoriesId = categories.map { it.id }
 
+            Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
 
             categoriesId.forEach {
                 threadPool.execute {
-                    val urlRecipes =
-                        URL("https://recipes.androidsprint.ru/api/category/$it/recipes")
-                    val connectionRecipes: HttpURLConnection =
-                        urlRecipes.openConnection() as HttpURLConnection
-                    val jsonRecipes = connectionRecipes.inputStream.bufferedReader().readText()
+
+                    val loggingInterceptorRecipes = HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }
+
+                    val clientRecipes = OkHttpClient.Builder()
+                        .addInterceptor(loggingInterceptorRecipes)
+                        .build()
+
+                    val requestRecipes: Request = Request.Builder()
+                        .url("https://recipes.androidsprint.ru/api/category/$it/recipes")
+                        .build()
+
+                    val jsonRecipes = clientRecipes.newCall(requestRecipes).execute().body?.string()
 
                     val listTypeRecipes = object : TypeToken<List<Recipe>>() {}.type
                     val recipes: List<Recipe> = Gson().fromJson(jsonRecipes, listTypeRecipes)
