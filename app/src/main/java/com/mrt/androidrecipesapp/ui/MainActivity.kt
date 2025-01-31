@@ -9,12 +9,17 @@ import com.google.gson.reflect.TypeToken
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.ActivityMainBinding
 import com.mrt.androidrecipesapp.model.Category
+import com.mrt.androidrecipesapp.model.Recipe
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
+
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,23 @@ class MainActivity : AppCompatActivity() {
             Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
 
             categories.forEach { Log.d("!!!", "Category: ${it.id} - ${it.title}") }
+
+            val categoriesId = categories.map { it.id }
+
+            threadPool.execute {
+
+                categoriesId.forEach {
+                    val urlRecipes = URL("https://recipes.androidsprint.ru/api/category/$it/recipes")
+                    val connectionRecipes: HttpURLConnection = urlRecipes.openConnection() as HttpURLConnection
+                    val jsonRecipes = connectionRecipes.inputStream.bufferedReader().readText()
+
+                    val listTypeRecipes = object : TypeToken<List<Recipe>>() {}.type
+                    val recipes: List<Recipe> = Gson().fromJson(jsonRecipes, listTypeRecipes)
+
+                    println("Рецепты для категории $it: $recipes")
+                }
+            }
+
         }
         thread.start()
 
