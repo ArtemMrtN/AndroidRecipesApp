@@ -47,24 +47,29 @@ class MainActivity : AppCompatActivity() {
 
             val categoriesId = categories.map { it.id }
 
-            threadPool.execute {
 
-                categoriesId.forEach {
-                    val urlRecipes = URL("https://recipes.androidsprint.ru/api/category/$it/recipes")
-                    val connectionRecipes: HttpURLConnection = urlRecipes.openConnection() as HttpURLConnection
+            categoriesId.forEach {
+                threadPool.execute {
+                    val urlRecipes =
+                        URL("https://recipes.androidsprint.ru/api/category/$it/recipes")
+                    val connectionRecipes: HttpURLConnection =
+                        urlRecipes.openConnection() as HttpURLConnection
                     val jsonRecipes = connectionRecipes.inputStream.bufferedReader().readText()
 
                     val listTypeRecipes = object : TypeToken<List<Recipe>>() {}.type
                     val recipes: List<Recipe> = Gson().fromJson(jsonRecipes, listTypeRecipes)
 
                     println("Рецепты для категории $it: $recipes")
+
+                    Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
                 }
             }
 
         }
         thread.start()
 
-        val navController = (supportFragmentManager.findFragmentById(R.id.mainContainer) as NavHostFragment).navController
+        val navController =
+            (supportFragmentManager.findFragmentById(R.id.mainContainer) as NavHostFragment).navController
 
         binding.buttonCategory.setOnClickListener {
             if (navController.currentDestination?.id != R.id.categoriesListFragment) {
