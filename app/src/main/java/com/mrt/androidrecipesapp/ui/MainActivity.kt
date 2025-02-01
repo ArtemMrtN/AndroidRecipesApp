@@ -22,6 +22,13 @@ class MainActivity : AppCompatActivity() {
 
     private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
 
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -31,52 +38,53 @@ class MainActivity : AppCompatActivity() {
 
         val thread = Thread {
 
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
+            try {
 
-            val client: OkHttpClient = OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build()
+                val request = Request.Builder()
+                    .url("https://recipes.androidsprint.ru/api/category")
+                    .build()
+                val json = client.newCall(request).execute().body?.string()
+                    ?: throw IllegalStateException("Ошибка загрузки категорий")
 
-            val request: Request = Request.Builder()
-                .url("https://recipes.androidsprint.ru/api/category")
-                .build()
+                val listType = object : TypeToken<List<Category>>() {}.type
+                val categories: List<Category> = Gson().fromJson(json, listType)
 
-            val json = client.newCall(request).execute().body?.string()
+                categories.forEach { Log.d("!!!", "Category: ${it.id} - ${it.title}") }
+                val categoriesId = categories.map { it.id }
 
-            val listType = object : TypeToken<List<Category>>() {}.type
-            val categories: List<Category> = Gson().fromJson(json, listType)
+                Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
 
-            categories.forEach { Log.d("!!!", "Category: ${it.id} - ${it.title}") }
-            val categoriesId = categories.map { it.id }
+                categoriesId.forEach {
+                    threadPool.execute {
 
-            Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+                        try {
 
-            categoriesId.forEach {
-                threadPool.execute {
+                            val requestRecipes: Request = Request.Builder()
+                                .url("https://recipes.androidsprint.ru/api/category/$it/recipes")
+                                .build()
 
-                    val loggingInterceptorRecipes = HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
+                            val jsonRecipes =
+                                client.newCall(requestRecipes).execute().body?.string()
+                                    ?: throw IllegalStateException("Ошибка загрузки товаров")
+
+                            val listTypeRecipes = object : TypeToken<List<Recipe>>() {}.type
+                            val recipes: List<Recipe> =
+                                Gson().fromJson(jsonRecipes, listTypeRecipes)
+
+                            println("Рецепты для категории $it: $recipes")
+
+                            Log.d(
+                                "!!!",
+                                "Выполняю запрос на потоке: ${Thread.currentThread().name}"
+                            )
+                        } catch (e: Exception) {
+                            Log.e("!!!", "Ошибка загрузки товаров", e)
+                        }
                     }
-
-                    val clientRecipes = OkHttpClient.Builder()
-                        .addInterceptor(loggingInterceptorRecipes)
-                        .build()
-
-                    val requestRecipes: Request = Request.Builder()
-                        .url("https://recipes.androidsprint.ru/api/category/$it/recipes")
-                        .build()
-
-                    val jsonRecipes = clientRecipes.newCall(requestRecipes).execute().body?.string()
-
-                    val listTypeRecipes = object : TypeToken<List<Recipe>>() {}.type
-                    val recipes: List<Recipe> = Gson().fromJson(jsonRecipes, listTypeRecipes)
-
-                    println("Рецепты для категории $it: $recipes")
-
-                    Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
                 }
+
+            } catch (e: Exception) {
+                Log.e("!!!", "Ошибка загрузки категорий", e)
             }
 
         }
