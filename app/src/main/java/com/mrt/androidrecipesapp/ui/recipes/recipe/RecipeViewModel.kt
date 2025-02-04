@@ -10,7 +10,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mrt.androidrecipesapp.data.RecipesRepository
-import com.mrt.androidrecipesapp.model.Ingredient
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
@@ -31,16 +30,12 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
     }
 
     data class RecipeState(
-        val recipes: List<Recipe> = emptyList(),
-        val title: String? = null,
-        val id: Int? = null,
+        val recipe: Recipe? = null,
         val quantity: Int? = null,
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
         val portionsCount: Int = 1,
         val recipeImage: Drawable? = null,
-        val method: List<String> = emptyList(),
-        val baseIngredients: List<Ingredient> = emptyList()
     )
 
     fun loadRecipe(recipeId: Int) {
@@ -63,11 +58,8 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
                 _state.postValue(
                     _state.value?.copy(
                         isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
-                        title = recipe?.title,
-                        id = recipe?.id,
-                        recipeImage = drawable,
-                        method = recipe?.method ?: emptyList(),
-                        baseIngredients = recipe?.ingredients ?: emptyList()
+                        recipe = recipe,
+                        recipeImage = drawable
                     )
                 )
 

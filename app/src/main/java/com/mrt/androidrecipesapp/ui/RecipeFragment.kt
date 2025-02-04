@@ -69,16 +69,16 @@ class RecipeFragment : Fragment() {
 
             binding.recipeNumberOfServings.text = state.portionsCount.toString()
             (binding.rvIngredients.adapter as IngredientsAdapter)
-                .updateIngredients(state.portionsCount, state.baseIngredients)
+                .updateIngredients(state.portionsCount, state.recipe?.ingredients ?: emptyList())
 
-            binding.recipesItemTitle.text = state.title
-            binding.recipesItemImage.contentDescription = state.title
+            binding.recipesItemTitle.text = state.recipe?.title
+            binding.recipesItemImage.contentDescription = state.recipe?.title
 
             binding.iconFavorites.setOnClickListener {
-                viewModel.onFavoritesClicked(state?.id ?: 0)
+                viewModel.onFavoritesClicked(state.recipe?.id ?: 0)
             }
 
-            binding.rvMethod.adapter = MethodAdapter(state.method)
+            binding.rvMethod.adapter = MethodAdapter(state.recipe?.method ?: emptyList())
 
         }
 
