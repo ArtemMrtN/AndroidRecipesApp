@@ -47,7 +47,7 @@ class RecipesListFragment : Fragment() {
             binding.recipesListImage.setImageDrawable(state.categoryImage)
             binding.recipesListImage.contentDescription =
                 "${R.string.item_category_image} ${state.currentCategory?.title}"
-            (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(state.recipes)
+            (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(state.recipes ?: emptyList())
         }
 
         recipesListAdapter.setOnItemClickListener(object :

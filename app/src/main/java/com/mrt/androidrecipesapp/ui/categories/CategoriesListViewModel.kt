@@ -2,9 +2,8 @@ package com.mrt.androidrecipesapp.ui.categories
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +20,7 @@ class CategoriesListViewModel(private val application: Application) :
     private val recipesRepository = RecipesRepository()
 
     data class CategoriesState(
-        val categories: List<Category> = emptyList(),
+        val categories: List<Category>? = null,
     )
 
     fun loadCategories() {
@@ -29,11 +28,14 @@ class CategoriesListViewModel(private val application: Application) :
             try {
                 val categories = recipesRepository.getCategories()
                 Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-                Handler(Looper.getMainLooper()).post {
-                    _state.value = _state.value?.copy(categories = categories ?: emptyList())
-                }
+                _state.postValue(
+                    _state.value?.copy(
+                        categories = categories
+                    )
+                )
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)
+                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
             }
         }
     }

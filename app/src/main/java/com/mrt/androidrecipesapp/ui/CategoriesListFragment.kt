@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.databinding.FragmentListCategoriesBinding
 import com.mrt.androidrecipesapp.ui.categories.CategoriesListViewModel
 
@@ -41,7 +39,7 @@ class CategoriesListFragment : Fragment() {
         binding.rvCategories.adapter = categoriesListAdapter
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            categoriesListAdapter.updateCategories(state.categories)
+            categoriesListAdapter.updateCategories(state?.categories ?: emptyList())
         }
 
         categoriesListAdapter.setOnItemClickListener(object :
@@ -56,8 +54,8 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
 
-        val category = STUB.getCategories().find { it.id == categoryId }
-            ?: throw IllegalArgumentException("${R.string.category_with_id} $categoryId ${R.string.no_found}")
+        val category = viewModel.state.value?.categories?.find { it.id == categoryId }
+            ?: throw IllegalStateException("Категория с ID $categoryId не найдена")
 
         val action = CategoriesListFragmentDirections
             .actionCategoriesListFragmentToRecipesListFragment(category)

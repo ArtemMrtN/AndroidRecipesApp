@@ -5,6 +5,7 @@ import com.mrt.androidrecipesapp.model.Recipe
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RecipeApiService {
 
@@ -20,7 +21,7 @@ interface RecipeApiService {
     @GET("recipe/{recipeId}")
     fun getRecipeById(@Path("recipeId") recipeId: Int): Call<Recipe?>
 
-    @GET("recipes?ids={id}")
-    fun getRecipesByIds(@Path("id") id: Set<String>): Call<List<Recipe>>
+    @GET("recipes")
+    fun getRecipesByIds(@Query("ids") ids: String): Call<List<Recipe>?>
 
 }

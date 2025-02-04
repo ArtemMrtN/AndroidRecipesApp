@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,16 +32,18 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
 
     data class RecipeState(
         val recipes: List<Recipe> = emptyList(),
+        val title: String? = null,
+        val id: Int? = null,
         val quantity: Int? = null,
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
         val portionsCount: Int = 1,
         val recipeImage: Drawable? = null,
-        val ingredients: List<Ingredient> = emptyList(),
+        val method: List<String> = emptyList(),
         val baseIngredients: List<Ingredient> = emptyList()
     )
 
-    fun loadRecipe(recipeId: Int): Recipe {
+    fun loadRecipe(recipeId: Int) {
         recipesRepository.threadPool.execute {
             try {
                 val recipe = recipesRepository.getRecipeById(recipeId)
@@ -58,19 +59,21 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
                     Log.e("!!!", "Image not found ${recipe?.imageUrl}")
                     null
                 }
-                Handler(Looper.getMainLooper()).post {
-                    if (recipe != null) {
-                        _state.value = _state.value?.copy(
-                            isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
-                            portionsCount = 1,
-                            recipeImage = drawable,
-                            ingredients = recipe.ingredients,
-                            baseIngredients = recipe.ingredients
-                        )
-                    }
-                }
+
+                _state.postValue(
+                    _state.value?.copy(
+                        isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
+                        title = recipe?.title,
+                        id = recipe?.id,
+                        recipeImage = drawable,
+                        method = recipe?.method ?: emptyList(),
+                        baseIngredients = recipe?.ingredients ?: emptyList()
+                    )
+                )
+
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)
+                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
             }
         }
     }

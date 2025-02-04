@@ -6,6 +6,8 @@ import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -18,7 +20,15 @@ class RecipesRepository {
 
     private val contentType = "application/json".toMediaType()
 
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
+
     private var retrofit: Retrofit = Retrofit.Builder()
+        .client(client)
         .baseUrl("https://recipes.androidsprint.ru/api/")
         .addConverterFactory(Json.asConverterFactory(contentType))
         .build()
@@ -85,7 +95,20 @@ class RecipesRepository {
         }
     }
 
-//    fun getRecipesByIds(id: Set<String>): Call<List<Recipe>> {
-//    }
+    fun getRecipesByIds(id: String): List<Recipe>? {
+        return try {
+            val recipeCall: Call<List<Recipe>?> = service.getRecipesByIds(id)
+            Log.i("!!!", "ids - $id")
+            val recipeResponse: Response<List<Recipe>?> = recipeCall.execute()
+            if (recipeResponse.isSuccessful) {
+                recipeResponse.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("!!!", "Ошибка загрузки Рецептов", e)
+            null
+        }
+    }
 
 }

@@ -3,14 +3,12 @@ package com.mrt.androidrecipesapp.ui.recipes.recipes_list
 import android.annotation.SuppressLint
 import android.app.Application
 import android.graphics.drawable.Drawable
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mrt.androidrecipesapp.data.RecipesRepository
-import com.mrt.androidrecipesapp.data.STUB
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
 
@@ -24,7 +22,7 @@ class RecipesListViewModel(private val application: Application) :
     private val recipesRepository = RecipesRepository()
 
     data class RecipesListState(
-        val recipes: List<Recipe> = emptyList(),
+        val recipes: List<Recipe>? = null,
         val currentCategory: Category? = null,
         val categoryImage: Drawable? = null,
     )
@@ -34,11 +32,14 @@ class RecipesListViewModel(private val application: Application) :
             try {
                 val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
                 Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-                Handler(Looper.getMainLooper()).post {
-                    _state.value = _state.value?.copy(recipes = recipes ?: emptyList())
-                }
+                _state.postValue(
+                    _state.value?.copy(
+                        recipes = recipes
+                    ) ?: RecipesListState(recipes = recipes)
+                )
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)
+                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -48,7 +49,6 @@ class RecipesListViewModel(private val application: Application) :
             try {
                 val category = recipesRepository.getCategoryById(categoryId)
                 Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-                Log.i("!!!", "category: $category")
                 val drawable = try {
                     Drawable.createFromStream(
                         application.applicationContext.assets.open(
@@ -60,13 +60,15 @@ class RecipesListViewModel(private val application: Application) :
                     Log.e("!!!", "Image not found ${category?.imageUrl}")
                     null
                 }
-                Handler(Looper.getMainLooper()).post {
-                    _state.value = _state.value?.copy(currentCategory = category)
-                    _state.value = _state.value?.copy(categoryImage = drawable)
-                }
-                Log.i("!!!", "_state.value?.categoryImage: ${_state.value?.categoryImage}")
+                _state.postValue(
+                    _state.value?.copy(
+                        currentCategory = category,
+                        categoryImage = drawable
+                    ) ?: RecipesListState(currentCategory = category, categoryImage = drawable)
+                )
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категории", e)
+                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
             }
         }
     }
