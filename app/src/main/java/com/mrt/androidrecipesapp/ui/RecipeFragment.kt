@@ -11,6 +11,7 @@ import android.widget.SeekBar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentRecipeBinding
@@ -65,7 +66,14 @@ class RecipeFragment : Fragment() {
             } else {
                 binding.iconFavorites.setImageResource(R.drawable.ic_heart_empty)
             }
-            binding.recipesItemImage.setImageDrawable(state.recipeImage)
+
+            Glide
+                .with(requireContext())
+                .load(state.recipeImage ?: R.drawable.img_error)
+                .centerCrop()
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(binding.recipesItemImage)
 
             binding.recipeNumberOfServings.text = state.portionsCount.toString()
             (binding.rvIngredients.adapter as IngredientsAdapter)

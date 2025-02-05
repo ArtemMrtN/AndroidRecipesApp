@@ -27,7 +27,7 @@ class RecipesRepository {
         .addInterceptor(loggingInterceptor)
         .build()
 
-    private var retrofit: Retrofit = Retrofit.Builder()
+    var retrofit: Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl("https://recipes.androidsprint.ru/api/")
         .addConverterFactory(Json.asConverterFactory(contentType))

@@ -2,7 +2,6 @@ package com.mrt.androidrecipesapp.ui.recipes.recipes_list
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -24,7 +23,7 @@ class RecipesListViewModel(private val application: Application) :
     data class RecipesListState(
         val recipes: List<Recipe>? = null,
         val currentCategory: Category? = null,
-        val categoryImage: Drawable? = null,
+        val categoryImage: String? = null,
     )
 
     fun loadRecipesList(categoryId: Int) {
@@ -49,22 +48,14 @@ class RecipesListViewModel(private val application: Application) :
             try {
                 val category = recipesRepository.getCategoryById(categoryId)
                 Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-                val drawable = try {
-                    Drawable.createFromStream(
-                        application.applicationContext.assets.open(
-                            category?.imageUrl ?: "Image not found"
-                        ),
-                        null
-                    )
-                } catch (e: Exception) {
-                    Log.e("!!!", "Image not found ${category?.imageUrl}")
-                    null
-                }
                 _state.postValue(
                     _state.value?.copy(
                         currentCategory = category,
-                        categoryImage = drawable
-                    ) ?: RecipesListState(currentCategory = category, categoryImage = drawable)
+                        categoryImage = "${recipesRepository.retrofit.baseUrl()}images/${category?.imageUrl}"
+                    ) ?: RecipesListState(
+                        currentCategory = category,
+                        categoryImage = "${recipesRepository.retrofit.baseUrl()}images/${category?.imageUrl}"
+                    )
                 )
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категории", e)

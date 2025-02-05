@@ -1,14 +1,14 @@
 package com.mrt.androidrecipesapp.ui
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mrt.androidrecipesapp.R
+import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.databinding.ItemRecipesBinding
 
@@ -16,6 +16,7 @@ class RecipesListAdapter(private var dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
+    private val recipesRepository = RecipesRepository()
 
     interface OnItemClickListener {
         fun onItemClick(recipeId: Int)
@@ -41,17 +42,14 @@ class RecipesListAdapter(private var dataSet: List<Recipe>) :
         val recipe: Recipe = dataSet[position]
         holder.itemRecipeTitle.text = recipe.title
 
-        val drawable =
-            try {
-                Drawable.createFromStream(
-                    holder.itemView.context.assets.open(recipe.imageUrl),
-                    null
-                )
-            } catch (e: Exception) {
-                Log.e("!!!", "Image not found ${recipe.imageUrl}")
-                null
-            }
-        holder.itemRecipeImage.setImageDrawable(drawable)
+        Glide
+            .with(holder.itemRecipeImage.context)
+            .load("${recipesRepository.retrofit.baseUrl()}images/${recipe.imageUrl}")
+            .centerCrop()
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(holder.itemRecipeImage)
+
         holder.itemRecipeImage.contentDescription =
             "${R.string.item_category_image} ${recipe.title}"
 

@@ -3,7 +3,6 @@ package com.mrt.androidrecipesapp.ui.recipes.recipe
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -35,7 +34,7 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
         val portionsCount: Int = 1,
-        val recipeImage: Drawable? = null,
+        val recipeImage: String? = null,
     )
 
     fun loadRecipe(recipeId: Int) {
@@ -43,25 +42,15 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
             try {
                 val recipe = recipesRepository.getRecipeById(recipeId)
                 Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-                val drawable = try {
-                    Drawable.createFromStream(
-                        application.applicationContext.assets.open(
-                            recipe?.imageUrl ?: "Image not found"
-                        ),
-                        null
-                    )
-                } catch (e: Exception) {
-                    Log.e("!!!", "Image not found ${recipe?.imageUrl}")
-                    null
-                }
 
                 _state.postValue(
                     _state.value?.copy(
                         isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
                         recipe = recipe,
-                        recipeImage = drawable
+                        recipeImage = "${recipesRepository.retrofit.baseUrl()}images/${recipe?.imageUrl}"
                     )
                 )
+                Log.i("!!!", "${recipe?.imageUrl}")
 
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)
