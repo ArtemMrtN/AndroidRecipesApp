@@ -1,6 +1,7 @@
 package com.mrt.androidrecipesapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 import com.mrt.androidrecipesapp.ui.recipes.recipes_list.RecipesListViewModel
@@ -44,7 +46,17 @@ class RecipesListFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.recipesListTitle.text = state.currentCategory?.title
-            binding.recipesListImage.setImageDrawable(state.categoryImage)
+
+            Glide
+                .with(requireContext())
+                .load(state.categoryImage)
+                .centerCrop()
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(binding.recipesListImage)
+
+            Log.i("!!!", "state.categoryImage - ${state.categoryImage}")
+
             binding.recipesListImage.contentDescription =
                 "${R.string.item_category_image} ${state.currentCategory?.title}"
             (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(state.recipes ?: emptyList())
