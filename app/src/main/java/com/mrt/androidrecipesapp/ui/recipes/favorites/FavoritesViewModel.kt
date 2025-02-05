@@ -1,11 +1,14 @@
 package com.mrt.androidrecipesapp.ui.recipes.favorites
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mrt.androidrecipesapp.data.STUB
+import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
@@ -16,25 +19,39 @@ class FavoritesViewModel(private val application: Application) :
     private var _state = MutableLiveData(FavoritesState())
     val state: LiveData<FavoritesState> get() = _state
 
+    @SuppressLint("StaticFieldLeak")
+    private val recipesRepository = RecipesRepository()
+
     init {
         getFavoritesByIds()
     }
 
     data class FavoritesState(
-        val recipes: List<Recipe> = emptyList(),
+        val recipes: List<Recipe>? = null,
     )
 
-    fun getFavorites(): HashSet<String> {
+    private fun getFavorites(): HashSet<String> {
         val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
         val storedSet = sharedPrefs.getStringSet(FAVORITES_ID, emptySet()) ?: emptySet()
         return HashSet(storedSet)
     }
 
-    fun getFavoritesByIds() {
-        val favoritesId = getFavorites()
-        val favoritesList = STUB.getRecipesByIds(favoritesId)
-        _state.value = _state.value?.copy(
-            recipes = favoritesList
-        )
+    private fun getFavoritesByIds() {
+        val favoritesId = getFavorites().joinToString(",")
+        recipesRepository.threadPool.execute {
+            try {
+                val recipesList = recipesRepository.getRecipesByIds(favoritesId)
+
+                _state.postValue(
+                    _state.value?.copy(
+                        recipes = recipesList
+                    )
+                )
+
+            } catch (e: Exception) {
+                Log.e("!!!", "Не удалось загрузить рецепты")
+                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

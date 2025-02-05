@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.databinding.FragmentRecipeBinding
 import com.mrt.androidrecipesapp.ui.recipes.recipe.RecipeViewModel
 
@@ -37,9 +36,9 @@ class RecipeFragment : Fragment() {
         val args: RecipeFragmentArgs by navArgs()
         val recipeId = args.recipeId
 
-        val recipe = viewModel.loadRecipe(recipeId)
+        viewModel.loadRecipe(recipeId)
 
-        initUI(recipe)
+        initUI()
 
     }
 
@@ -55,9 +54,10 @@ class RecipeFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initUI(recipe: Recipe) {
+    private fun initUI() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
+
             Log.i("!!!", "isFavorite: ${state.isFavorites}")
 
             if (state.isFavorites) {
@@ -68,7 +68,17 @@ class RecipeFragment : Fragment() {
             binding.recipesItemImage.setImageDrawable(state.recipeImage)
 
             binding.recipeNumberOfServings.text = state.portionsCount.toString()
-            (binding.rvIngredients.adapter as IngredientsAdapter).updateIngredients(state.portionsCount)
+            (binding.rvIngredients.adapter as IngredientsAdapter)
+                .updateIngredients(state.portionsCount, state.recipe?.ingredients ?: emptyList())
+
+            binding.recipesItemTitle.text = state.recipe?.title
+            binding.recipesItemImage.contentDescription = state.recipe?.title
+
+            binding.iconFavorites.setOnClickListener {
+                viewModel.onFavoritesClicked(state.recipe?.id ?: 0)
+            }
+
+            binding.rvMethod.adapter = MethodAdapter(state.recipe?.method ?: emptyList())
 
         }
 
@@ -76,15 +86,7 @@ class RecipeFragment : Fragment() {
             viewModel.updatePortionsCount(progress)
         })
 
-        binding.rvIngredients.adapter = IngredientsAdapter(recipe.ingredients)
-
-        binding.recipesItemTitle.text = recipe.title
-
-        binding.recipesItemImage.contentDescription = recipe.title
-
-        binding.iconFavorites.setOnClickListener {
-            viewModel.onFavoritesClicked(recipe.id)
-        }
+        binding.rvIngredients.adapter = IngredientsAdapter(emptyList())
 
         val divider =
             MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
@@ -96,7 +98,6 @@ class RecipeFragment : Fragment() {
             }
         binding.rvIngredients.addItemDecoration(divider)
 
-        binding.rvMethod.adapter = MethodAdapter(recipe.method)
         binding.rvMethod.addItemDecoration(divider)
 
     }

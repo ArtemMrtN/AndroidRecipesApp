@@ -37,10 +37,12 @@ class FavoritesFragment : Fragment() {
         binding.rvFavoritesList.adapter = favoritesListAdapter
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            if (state.recipes.isEmpty()) {
+            if (state.recipes == null) {
                 binding.emptyTextView.visibility = View.VISIBLE
                 binding.rvFavoritesList.visibility = View.GONE
             } else {
+                binding.emptyTextView.visibility = View.GONE
+                binding.rvFavoritesList.visibility = View.VISIBLE
                 favoritesListAdapter.updateRecipes(state.recipes)
             }
         }

@@ -13,7 +13,7 @@ import java.math.RoundingMode
 class IngredientsAdapter(var dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
-        private var portions: Int = 1
+    private var portions: Int = 1
 
     class ViewHolder(binding: ItemIngrediensBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -48,8 +48,9 @@ class IngredientsAdapter(var dataSet: List<Ingredient>) :
     override fun getItemCount() = dataSet.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateIngredients(progress: Int) {
+    fun updateIngredients(progress: Int, ingredients: List<Ingredient>) {
         portions = progress
+        dataSet = ingredients
         notifyDataSetChanged()
     }
 }

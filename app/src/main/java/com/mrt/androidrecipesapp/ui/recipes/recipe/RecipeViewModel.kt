@@ -1,14 +1,15 @@
 package com.mrt.androidrecipesapp.ui.recipes.recipe
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mrt.androidrecipesapp.data.STUB
-import com.mrt.androidrecipesapp.model.Ingredient
+import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
@@ -18,6 +19,9 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
     private var _state = MutableLiveData(RecipeState())
     val state: LiveData<RecipeState> get() = _state
 
+    @SuppressLint("StaticFieldLeak")
+    private val recipesRepository = RecipesRepository()
+
     init {
 
         Log.i("!!!", "New state")
@@ -26,39 +30,44 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
     }
 
     data class RecipeState(
-        val recipes: List<Recipe> = emptyList(),
+        val recipe: Recipe? = null,
         val quantity: Int? = null,
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
         val portionsCount: Int = 1,
         val recipeImage: Drawable? = null,
-        val ingredients: List<Ingredient> = emptyList(),
-        val baseIngredients: List<Ingredient> = emptyList()
     )
 
-    fun loadRecipe(recipeId: Int): Recipe {
-        val recipe = STUB.getRecipeById(recipeId)
-            ?: throw IllegalStateException("Recipe with ID $recipeId not found")
+    fun loadRecipe(recipeId: Int) {
+        recipesRepository.threadPool.execute {
+            try {
+                val recipe = recipesRepository.getRecipeById(recipeId)
+                Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+                val drawable = try {
+                    Drawable.createFromStream(
+                        application.applicationContext.assets.open(
+                            recipe?.imageUrl ?: "Image not found"
+                        ),
+                        null
+                    )
+                } catch (e: Exception) {
+                    Log.e("!!!", "Image not found ${recipe?.imageUrl}")
+                    null
+                }
 
-        val drawable = try {
-            Drawable.createFromStream(
-                application.applicationContext.assets.open(recipe.imageUrl),
-                null
-            )
-        } catch (e: Exception) {
-            Log.e("!!!", "Image not found ${recipe.imageUrl}")
-            null
+                _state.postValue(
+                    _state.value?.copy(
+                        isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
+                        recipe = recipe,
+                        recipeImage = drawable
+                    )
+                )
+
+            } catch (e: Exception) {
+                Log.e("!!!", "Ошибка загрузки категорий", e)
+                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
+            }
         }
-
-        _state.value = _state.value?.copy(
-            isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
-            portionsCount = 1,
-            recipeImage = drawable,
-            ingredients = recipe.ingredients,
-            baseIngredients = recipe.ingredients
-        )
-        return recipe
-        TODO("load from network")
     }
 
     fun getFavorites(): MutableSet<String> {

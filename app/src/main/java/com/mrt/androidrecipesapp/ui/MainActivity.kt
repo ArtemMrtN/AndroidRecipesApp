@@ -7,12 +7,16 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mrt.androidrecipesapp.R
+import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.databinding.ActivityMainBinding
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -40,14 +44,11 @@ class MainActivity : AppCompatActivity() {
 
             try {
 
-                val request = Request.Builder()
-                    .url("https://recipes.androidsprint.ru/api/category")
-                    .build()
-                val json = client.newCall(request).execute().body?.string()
-                    ?: throw IllegalStateException("Ошибка загрузки категорий")
+                val recipesRepository = RecipesRepository()
 
-                val listType = object : TypeToken<List<Category>>() {}.type
-                val categories: List<Category> = Gson().fromJson(json, listType)
+                val categoriesCall: Call<List<Category>> = recipesRepository.service.getCategories()
+                val categoriesResponse = categoriesCall.execute()
+                val categories: List<Category> = categoriesResponse.body() ?: emptyList()
 
                 categories.forEach { Log.d("!!!", "Category: ${it.id} - ${it.title}") }
                 val categoriesId = categories.map { it.id }
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        thread.start()
+//        thread.start()
 
         val navController =
             (supportFragmentManager.findFragmentById(R.id.mainContainer) as NavHostFragment).navController
