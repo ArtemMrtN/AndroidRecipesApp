@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.data.RecipesRepository
+import com.mrt.androidrecipesapp.data.BASE_URL
+import com.mrt.androidrecipesapp.data.ImageLoader
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.databinding.ItemRecipesBinding
 
@@ -16,7 +16,6 @@ class RecipesListAdapter(private var dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     private var itemClickListener: OnItemClickListener? = null
-    private val recipesRepository = RecipesRepository()
 
     interface OnItemClickListener {
         fun onItemClick(recipeId: Int)
@@ -42,13 +41,11 @@ class RecipesListAdapter(private var dataSet: List<Recipe>) :
         val recipe: Recipe = dataSet[position]
         holder.itemRecipeTitle.text = recipe.title
 
-        Glide
-            .with(holder.itemRecipeImage.context)
-            .load("${recipesRepository.retrofit.baseUrl()}images/${recipe.imageUrl}")
-            .centerCrop()
-            .placeholder(R.drawable.img_placeholder)
-            .error(R.drawable.img_error)
-            .into(holder.itemRecipeImage)
+        ImageLoader.loadImage(
+            holder.itemRecipeImage.context,
+            holder.itemRecipeImage,
+            "${BASE_URL}images/${recipe.imageUrl}"
+        )
 
         holder.itemRecipeImage.contentDescription =
             "${R.string.item_category_image} ${recipe.title}"

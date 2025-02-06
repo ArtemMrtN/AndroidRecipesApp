@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
+import kotlinx.coroutines.launch
 
 class RecipeViewModel(private val application: Application) : AndroidViewModel(application) {
 
@@ -34,20 +36,17 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         val isFavorites: Boolean = false,
         val isLoading: Boolean = false,
         val portionsCount: Int = 1,
-        val recipeImage: String? = null,
     )
 
     fun loadRecipe(recipeId: Int) {
-        recipesRepository.threadPool.execute {
+        viewModelScope.launch {
             try {
                 val recipe = recipesRepository.getRecipeById(recipeId)
-                Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
 
                 _state.postValue(
                     _state.value?.copy(
                         isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
                         recipe = recipe,
-                        recipeImage = "${recipesRepository.retrofit.baseUrl()}images/${recipe?.imageUrl}"
                     )
                 )
                 Log.i("!!!", "${recipe?.imageUrl}")
@@ -59,7 +58,7 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         }
     }
 
-    fun getFavorites(): MutableSet<String> {
+    private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
         val storedSet = sharedPrefs.getStringSet(FAVORITES_ID, emptySet()) ?: emptySet()
 

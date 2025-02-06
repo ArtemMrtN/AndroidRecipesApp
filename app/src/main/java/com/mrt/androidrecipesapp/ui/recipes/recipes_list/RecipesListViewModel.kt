@@ -7,9 +7,12 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.mrt.androidrecipesapp.data.BASE_URL
 import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
+import kotlinx.coroutines.launch
 
 class RecipesListViewModel(private val application: Application) :
     AndroidViewModel(application) {
@@ -27,10 +30,9 @@ class RecipesListViewModel(private val application: Application) :
     )
 
     fun loadRecipesList(categoryId: Int) {
-        recipesRepository.threadPool.execute {
+        viewModelScope.launch {
             try {
                 val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
-                Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
                 _state.postValue(
                     _state.value?.copy(
                         recipes = recipes
@@ -44,17 +46,16 @@ class RecipesListViewModel(private val application: Application) :
     }
 
     fun loadCurrentCategory(categoryId: Int) {
-        recipesRepository.threadPool.execute {
+        viewModelScope.launch {
             try {
                 val category = recipesRepository.getCategoryById(categoryId)
-                Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
                 _state.postValue(
                     _state.value?.copy(
                         currentCategory = category,
-                        categoryImage = "${recipesRepository.retrofit.baseUrl()}images/${category?.imageUrl}"
+                        categoryImage = "${BASE_URL}images/${category?.imageUrl}"
                     ) ?: RecipesListState(
                         currentCategory = category,
-                        categoryImage = "${recipesRepository.retrofit.baseUrl()}images/${category?.imageUrl}"
+                        categoryImage = "${BASE_URL}images/${category?.imageUrl}"
                     )
                 )
             } catch (e: Exception) {
