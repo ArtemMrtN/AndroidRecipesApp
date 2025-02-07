@@ -4,6 +4,7 @@ import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -15,6 +16,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class RecipesRepository {
+
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     private val contentType = "application/json".toMediaType()
 
@@ -34,7 +37,7 @@ class RecipesRepository {
     private var service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
     suspend fun getCategories(): List<Category>? =
-        withContext(Dispatchers.IO) {
+        withContext(defaultDispatcher) {
             try {
                 val categoriesCall: Call<List<Category>> = service.getCategories()
                 val categoriesResponse: Response<List<Category>> = categoriesCall.execute()
@@ -50,7 +53,7 @@ class RecipesRepository {
         }
 
     suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
-        withContext(Dispatchers.IO) {
+        withContext(defaultDispatcher) {
             try {
                 val recipesCall: Call<List<Recipe>> = service.getRecipesByCategoryId(categoryId)
                 val recipesResponse: Response<List<Recipe>> = recipesCall.execute()
@@ -66,7 +69,7 @@ class RecipesRepository {
         }
 
     suspend fun getCategoryById(categoryId: Int): Category? =
-        withContext(Dispatchers.IO) {
+        withContext(defaultDispatcher) {
             try {
                 val categoryCall: Call<Category?> = service.getCategoryById(categoryId)
                 val categoryResponse: Response<Category?> = categoryCall.execute()
@@ -82,7 +85,7 @@ class RecipesRepository {
         }
 
     suspend fun getRecipeById(recipeId: Int): Recipe? =
-        withContext(Dispatchers.IO) {
+        withContext(defaultDispatcher) {
             try {
                 val recipeCall: Call<Recipe?> = service.getRecipeById(recipeId)
                 val recipeResponse: Response<Recipe?> = recipeCall.execute()
@@ -98,7 +101,7 @@ class RecipesRepository {
         }
 
     suspend fun getRecipesByIds(id: String): List<Recipe>? =
-        withContext(Dispatchers.IO) {
+        withContext(defaultDispatcher) {
             try {
                 val recipeCall: Call<List<Recipe>?> = service.getRecipesByIds(id)
                 Log.i("!!!", "ids - $id")
