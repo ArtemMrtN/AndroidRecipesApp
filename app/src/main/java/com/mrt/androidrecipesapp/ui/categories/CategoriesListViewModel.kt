@@ -19,7 +19,7 @@ class CategoriesListViewModel(private val application: Application) :
     val state: LiveData<CategoriesState> get() = _state
 
     @SuppressLint("StaticFieldLeak")
-    private val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository(application)
 
     data class CategoriesState(
         val categories: List<Category>? = null,
