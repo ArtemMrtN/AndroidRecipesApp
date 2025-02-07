@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
 import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
+import kotlinx.coroutines.launch
 
 class FavoritesViewModel(private val application: Application) :
     AndroidViewModel(application) {
@@ -38,7 +40,7 @@ class FavoritesViewModel(private val application: Application) :
 
     private fun getFavoritesByIds() {
         val favoritesId = getFavorites().joinToString(",")
-        recipesRepository.threadPool.execute {
+        viewModelScope.launch {
             try {
                 val recipesList = recipesRepository.getRecipesByIds(favoritesId)
 

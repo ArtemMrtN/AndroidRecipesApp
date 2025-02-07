@@ -7,8 +7,10 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Category
+import kotlinx.coroutines.launch
 
 class CategoriesListViewModel(private val application: Application) :
     AndroidViewModel(application) {
@@ -24,10 +26,9 @@ class CategoriesListViewModel(private val application: Application) :
     )
 
     fun loadCategories() {
-        recipesRepository.threadPool.execute {
+        viewModelScope.launch {
             try {
                 val categories = recipesRepository.getCategories()
-                Log.d("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
                 _state.postValue(
                     _state.value?.copy(
                         categories = categories
