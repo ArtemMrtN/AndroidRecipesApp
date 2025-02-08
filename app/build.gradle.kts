@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     id("androidx.navigation.safeargs.kotlin")
     kotlin("plugin.serialization")
-    id("com.google.devtools.ksp") version "1.9.0-1.0.13" apply false
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -56,7 +56,7 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -1,7 +1,6 @@
 package com.mrt.androidrecipesapp.data
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -50,6 +49,11 @@ class RecipesRepository(application: Application) {
     suspend fun getCategoriesFromCache(): List<Category> =
         withContext(defaultDispatcher) {
             categoriesDao.getAllCategories()
+        }
+
+    suspend fun addCategoryToCache(categories: List<Category>) =
+        withContext(defaultDispatcher) {
+            categoriesDao.addCategory(categories)
         }
 
     suspend fun getCategories(): List<Category>? =
