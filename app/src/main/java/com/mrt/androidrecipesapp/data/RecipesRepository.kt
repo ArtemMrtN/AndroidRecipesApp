@@ -1,6 +1,8 @@
 package com.mrt.androidrecipesapp.data
 
+import android.app.Application
 import android.util.Log
+import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
@@ -15,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class RecipesRepository {
+class RecipesRepository(application: Application) {
 
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -35,6 +37,24 @@ class RecipesRepository {
         .build()
 
     private var service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
+
+    private val db: AppDatabase = Room.databaseBuilder(
+        application.applicationContext,
+        AppDatabase::class.java,
+        "database-categories"
+    ).build()
+
+    private val categoriesDao: CategoriesDao = db.categoriesDao()
+
+    suspend fun getCategoriesFromCache(): List<Category> =
+        withContext(defaultDispatcher) {
+            categoriesDao.getAllCategories()
+        }
+
+    suspend fun addCategoryToCache(categories: List<Category>) =
+        withContext(defaultDispatcher) {
+            categoriesDao.addCategory(categories)
+        }
 
     suspend fun getCategories(): List<Category>? =
         withContext(defaultDispatcher) {

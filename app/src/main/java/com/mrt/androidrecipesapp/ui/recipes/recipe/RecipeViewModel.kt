@@ -21,7 +21,7 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
     val state: LiveData<RecipeState> get() = _state
 
     @SuppressLint("StaticFieldLeak")
-    private val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository(application)
 
     init {
 

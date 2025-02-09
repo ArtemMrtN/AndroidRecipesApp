@@ -19,7 +19,7 @@ class CategoriesListViewModel(private val application: Application) :
     val state: LiveData<CategoriesState> get() = _state
 
     @SuppressLint("StaticFieldLeak")
-    private val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository(application)
 
     data class CategoriesState(
         val categories: List<Category>? = null,
@@ -28,17 +28,22 @@ class CategoriesListViewModel(private val application: Application) :
     fun loadCategories() {
         viewModelScope.launch {
             try {
-                val categories = recipesRepository.getCategories()
+                val categoriesFromCache = recipesRepository.getCategoriesFromCache()
                 _state.postValue(
                     _state.value?.copy(
-                        categories = categories
+                        categories = categoriesFromCache
                     )
                 )
+                Log.i("!!!", "categoriesFromCache - ${state.value?.categories}")
+
+                val categories = recipesRepository.getCategories()
+                recipesRepository.addCategoryToCache(categories ?: emptyList())
+                Log.i("!!!", "categories - ${state.value?.categories}")
+
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)
                 Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 }
