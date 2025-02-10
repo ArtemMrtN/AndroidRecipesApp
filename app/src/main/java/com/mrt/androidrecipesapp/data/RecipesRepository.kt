@@ -41,8 +41,10 @@ class RecipesRepository(application: Application) {
     private val db: AppDatabase = Room.databaseBuilder(
         application.applicationContext,
         AppDatabase::class.java,
-        "database-categories"
-    ).build()
+        "database"
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 
     private val categoriesDao: CategoriesDao = db.categoriesDao()
 
@@ -54,6 +56,18 @@ class RecipesRepository(application: Application) {
     suspend fun addCategoryToCache(categories: List<Category>) =
         withContext(defaultDispatcher) {
             categoriesDao.addCategory(categories)
+        }
+
+    private val recipesListDao: RecipesListDao = db.recipesListDao()
+
+    suspend fun getRecipesListFromCache(): List<Recipe> =
+        withContext(defaultDispatcher) {
+            recipesListDao.getAllRecipes()
+        }
+
+    suspend fun addRecipesToCache(recipes: List<Recipe>) =
+        withContext(defaultDispatcher) {
+            recipesListDao.addRecipe(recipes)
         }
 
     suspend fun getCategories(): List<Category>? =
