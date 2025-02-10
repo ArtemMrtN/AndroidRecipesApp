@@ -32,7 +32,7 @@ class RecipesListViewModel(private val application: Application) :
     fun loadRecipesList(categoryId: Int) {
         viewModelScope.launch {
             try {
-                val recipesFromCache = recipesRepository.getRecipesListFromCache()
+                val recipesFromCache = recipesRepository.getRecipesListFromCache(categoryId)
                 _state.postValue(
                     _state.value?.copy(
                         recipes = recipesFromCache
@@ -40,7 +40,12 @@ class RecipesListViewModel(private val application: Application) :
                 )
 
                 val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
-                recipesRepository.addRecipesToCache(recipes ?: emptyList())
+                recipesRepository.addRecipesToCache(recipes ?: emptyList(), categoryId)
+                _state.postValue(
+                    _state.value?.copy(
+                        recipes = recipes
+                    )
+                )
 
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)

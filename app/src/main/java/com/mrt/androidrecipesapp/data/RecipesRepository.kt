@@ -60,14 +60,15 @@ class RecipesRepository(application: Application) {
 
     private val recipesListDao: RecipesListDao = db.recipesListDao()
 
-    suspend fun getRecipesListFromCache(): List<Recipe> =
+    suspend fun getRecipesListFromCache(categoryId: Int): List<Recipe> =
         withContext(defaultDispatcher) {
-            recipesListDao.getAllRecipes()
+            recipesListDao.getRecipesByCategory(categoryId)
         }
 
-    suspend fun addRecipesToCache(recipes: List<Recipe>) =
+    suspend fun addRecipesToCache(recipes: List<Recipe>, categoryId: Int) =
         withContext(defaultDispatcher) {
-            recipesListDao.addRecipe(recipes)
+            val updatedRecipes = recipes.map { it.copy(categoryId = categoryId) }
+            recipesListDao.addRecipe(updatedRecipes)
         }
 
     suspend fun getCategories(): List<Category>? =
