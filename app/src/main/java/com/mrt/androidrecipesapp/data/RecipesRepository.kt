@@ -78,10 +78,15 @@ class RecipesRepository(application: Application) {
             favoritesDao.getFavoritesRecipes().filter { it.isFavorite }
         }
 
-    suspend fun addFavoritesRecipesToCache(recipes: List<Recipe>) =
+    suspend fun addRecipeToFavoritesToCache(recipeId: Int) =
         withContext(defaultDispatcher) {
-            val updatedRecipes = recipes.map { it.copy(isFavorite = true) }
-            favoritesDao.addRecipe(updatedRecipes)
+            favoritesDao.addRecipeToFavorites(recipeId)
+            recipesListDao.updateFavoriteStatus(recipeId, true)
+        }
+
+    suspend fun removeRecipeToFavoritesToCache(recipeId: Int) =
+        withContext(defaultDispatcher) {
+            favoritesDao.deleteRecipe(recipeId)
         }
 
 

@@ -82,7 +82,7 @@ class RecipeFragment : Fragment() {
             binding.recipesItemImage.contentDescription = state.recipe?.title
 
             binding.iconFavorites.setOnClickListener {
-                viewModel.onFavoritesClicked(state.recipe?.id ?: 0)
+                viewModel.onFavoritesClicked(state.recipe?.id ?: -1)
             }
 
             binding.rvMethod.adapter = MethodAdapter(state.recipe?.method ?: emptyList())
@@ -107,11 +107,6 @@ class RecipeFragment : Fragment() {
 
         binding.rvMethod.addItemDecoration(divider)
 
-    }
-
-    companion object {
-        const val FAVORITES = "favorites"
-        const val FAVORITES_ID = "favorites_id"
     }
 
 }

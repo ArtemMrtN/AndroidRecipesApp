@@ -40,7 +40,12 @@ class RecipesListViewModel(private val application: Application) :
                 )
 
                 val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
-                recipesRepository.addRecipesToCache(recipes ?: emptyList(), categoryId)
+                val favorites = recipesRepository.getFavoritesRecipesFromCache().map { it.id }
+                val updatedRecipes = recipes?.map { recipe ->
+                    recipe.copy(isFavorite = favorites.contains(recipe.id))
+                } ?: emptyList()
+
+                recipesRepository.addRecipesToCache(updatedRecipes, categoryId)
                 _state.postValue(
                     _state.value?.copy(
                         recipes = recipes

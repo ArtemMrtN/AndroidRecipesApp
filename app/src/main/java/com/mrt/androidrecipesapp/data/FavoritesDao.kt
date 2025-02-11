@@ -1,8 +1,6 @@
 package com.mrt.androidrecipesapp.data
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mrt.androidrecipesapp.model.Recipe
 
@@ -12,7 +10,10 @@ interface FavoritesDao {
     @Query("SELECT * FROM recipe")
     fun getFavoritesRecipes(): List<Recipe>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addRecipe(recipes: List<Recipe>)
+    @Query("UPDATE recipe SET isFavorite = 1 WHERE id = :recipeId")
+    fun addRecipeToFavorites(recipeId: Int)
+
+    @Query("UPDATE recipe SET isFavorite = 0 WHERE id = :recipeId")
+    fun deleteRecipe(recipeId: Int)
 
 }
