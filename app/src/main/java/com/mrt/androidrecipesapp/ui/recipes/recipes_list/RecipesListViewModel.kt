@@ -32,12 +32,21 @@ class RecipesListViewModel(private val application: Application) :
     fun loadRecipesList(categoryId: Int) {
         viewModelScope.launch {
             try {
+                val recipesFromCache = recipesRepository.getRecipesListFromCache(categoryId)
+                _state.postValue(
+                    _state.value?.copy(
+                        recipes = recipesFromCache
+                    )
+                )
+
                 val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
+                recipesRepository.addRecipesToCache(recipes ?: emptyList(), categoryId)
                 _state.postValue(
                     _state.value?.copy(
                         recipes = recipes
-                    ) ?: RecipesListState(recipes = recipes)
+                    )
                 )
+
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категорий", e)
                 Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
@@ -58,6 +67,7 @@ class RecipesListViewModel(private val application: Application) :
                         categoryImage = "${BASE_URL}images/${category?.imageUrl}"
                     )
                 )
+                Log.i("!!!", "state.value?.currentCategory - ${state.value?.currentCategory}")
             } catch (e: Exception) {
                 Log.e("!!!", "Ошибка загрузки категории", e)
                 Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
