@@ -42,13 +42,21 @@ class FavoritesViewModel(private val application: Application) :
         val favoritesId = getFavorites().joinToString(",")
         viewModelScope.launch {
             try {
-                val recipesList = recipesRepository.getRecipesByIds(favoritesId)
+                val favoritesRecipesFromCache = recipesRepository.getFavoritesRecipesFromCache()
+                _state.postValue(
+                    _state.value?.copy(
+                        recipes = favoritesRecipesFromCache
+                    )
+                )
 
+                val recipesList = recipesRepository.getRecipesByIds(favoritesId)
+                recipesRepository.addFavoritesRecipesToCache(recipesList ?: emptyList())
                 _state.postValue(
                     _state.value?.copy(
                         recipes = recipesList
                     )
                 )
+
 
             } catch (e: Exception) {
                 Log.e("!!!", "Не удалось загрузить рецепты")

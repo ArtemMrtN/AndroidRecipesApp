@@ -71,6 +71,20 @@ class RecipesRepository(application: Application) {
             recipesListDao.addRecipe(updatedRecipes)
         }
 
+    private val favoritesDao: FavoritesDao = db.favoritesDao()
+
+    suspend fun getFavoritesRecipesFromCache() =
+        withContext(defaultDispatcher) {
+            favoritesDao.getFavoritesRecipes().filter { it.isFavorite }
+        }
+
+    suspend fun addFavoritesRecipesToCache(recipes: List<Recipe>) =
+        withContext(defaultDispatcher) {
+            val updatedRecipes = recipes.map { it.copy(isFavorite = true) }
+            favoritesDao.addRecipe(updatedRecipes)
+        }
+
+
     suspend fun getCategories(): List<Category>? =
         withContext(defaultDispatcher) {
             try {
