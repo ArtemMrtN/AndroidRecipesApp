@@ -17,4 +17,5 @@ data class Recipe(
     @ColumnInfo(name = "method") val method: List<String> = emptyList(),
     @ColumnInfo(name = "imageUrl") val imageUrl: String,
     @ColumnInfo(name = "categoryId") @Transient val categoryId: Int = -1,
+    @ColumnInfo(name = "isFavorite") @Transient val isFavorite: Boolean = false,
 ) : Parcelable

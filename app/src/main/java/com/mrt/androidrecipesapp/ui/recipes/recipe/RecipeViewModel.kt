@@ -2,7 +2,6 @@ package com.mrt.androidrecipesapp.ui.recipes.recipe
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -11,8 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
-import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES
-import com.mrt.androidrecipesapp.ui.RecipeFragment.Companion.FAVORITES_ID
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -45,7 +42,8 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
 
                 _state.postValue(
                     _state.value?.copy(
-                        isFavorites = getFavorites().any { it.toIntOrNull() == recipeId },
+                        isFavorites = recipesRepository.getFavoritesRecipesFromCache()
+                            .any { it.id == recipeId },
                         recipe = recipe,
                     )
                 )
@@ -58,37 +56,23 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
         }
     }
 
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
-        val storedSet = sharedPrefs.getStringSet(FAVORITES_ID, emptySet()) ?: emptySet()
-
-        return HashSet(storedSet)
-    }
-
     fun onFavoritesClicked(recipeId: Int) {
-        val favorites = getFavorites()
-
-        if (favorites.any { it.toIntOrNull() == recipeId }) {
-            favorites.remove(recipeId.toString())
-            _state.value = _state.value?.copy(isFavorites = false)
-        } else {
-            favorites.add(recipeId.toString())
-            _state.value = _state.value?.copy(isFavorites = true)
+        viewModelScope.launch {
+            val favorites = recipesRepository.getFavoritesRecipesFromCache()
+            if (favorites.any { it.id == recipeId }) {
+                recipesRepository.removeRecipeToFavoritesToCache(recipeId)
+                _state.value = _state.value?.copy(isFavorites = false)
+            } else {
+                recipesRepository.addRecipeToFavoritesToCache(recipeId)
+                _state.value = _state.value?.copy(isFavorites = true)
+            }
         }
-        saveFavorites(favorites)
     }
 
     fun updatePortionsCount(newCount: Int) {
         _state.value = _state.value?.copy(
             portionsCount = newCount
         )
-    }
-
-    private fun saveFavorites(id: Set<String>) {
-        val sharedPrefs = application.getSharedPreferences(FAVORITES, Context.MODE_PRIVATE)
-        sharedPrefs.edit()
-            .putStringSet(FAVORITES_ID, id)
-            .apply()
     }
 
 }
