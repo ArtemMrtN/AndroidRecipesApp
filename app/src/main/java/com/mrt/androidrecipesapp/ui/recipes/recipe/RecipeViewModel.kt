@@ -1,24 +1,20 @@
 package com.mrt.androidrecipesapp.ui.recipes.recipe
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mrt.androidrecipesapp.data.RecipesRepository
 import com.mrt.androidrecipesapp.model.Recipe
 import kotlinx.coroutines.launch
 
-class RecipeViewModel(private val application: Application) : AndroidViewModel(application) {
+class RecipeViewModel(
+    private val recipesRepository: RecipesRepository,
+) : ViewModel() {
 
     private var _state = MutableLiveData(RecipeState())
     val state: LiveData<RecipeState> get() = _state
-
-    @SuppressLint("StaticFieldLeak")
-    private val recipesRepository = RecipesRepository(application)
 
     init {
 
@@ -37,22 +33,16 @@ class RecipeViewModel(private val application: Application) : AndroidViewModel(a
 
     fun loadRecipe(recipeId: Int) {
         viewModelScope.launch {
-            try {
-                val recipe = recipesRepository.getRecipeById(recipeId)
+            val recipe = recipesRepository.getRecipeById(recipeId)
 
-                _state.postValue(
-                    _state.value?.copy(
-                        isFavorites = recipesRepository.getFavoritesRecipesFromCache()
-                            .any { it.id == recipeId },
-                        recipe = recipe,
-                    )
+            _state.postValue(
+                _state.value?.copy(
+                    isFavorites = recipesRepository.getFavoritesRecipesFromCache()
+                        .any { it.id == recipeId },
+                    recipe = recipe,
                 )
-                Log.i("!!!", "${recipe?.imageUrl}")
-
-            } catch (e: Exception) {
-                Log.e("!!!", "Ошибка загрузки категорий", e)
-                Toast.makeText(application, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
-            }
+            )
+            Log.i("!!!", "${recipe?.imageUrl}")
         }
     }
 

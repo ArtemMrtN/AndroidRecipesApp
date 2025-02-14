@@ -1,52 +1,20 @@
 package com.mrt.androidrecipesapp.data
 
-import android.app.Application
 import android.util.Log
-import androidx.room.Room
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.Retrofit
+import kotlin.coroutines.CoroutineContext
 
-class RecipesRepository(application: Application) {
-
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-
-    private val contentType = "application/json".toMediaType()
-
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
-    private val client: OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .build()
-
-    private var retrofit: Retrofit = Retrofit.Builder()
-        .client(client)
-        .baseUrl(BASE_URL)
-        .addConverterFactory(Json.asConverterFactory(contentType))
-        .build()
-
-    private var service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
-
-    private val db: AppDatabase = Room.databaseBuilder(
-        application.applicationContext,
-        AppDatabase::class.java,
-        "database"
-    )
-        .fallbackToDestructiveMigration()
-        .build()
-
-    private val categoriesDao: CategoriesDao = db.categoriesDao()
+class RecipesRepository(
+    private val recipesListDao: RecipesListDao,
+    private val categoriesDao: CategoriesDao,
+    private val favoritesDao: FavoritesDao,
+    private val service: RecipeApiService,
+    private val defaultDispatcher: CoroutineContext,
+) {
 
     suspend fun getCategoriesFromCache(): List<Category> =
         withContext(defaultDispatcher) {
@@ -58,7 +26,6 @@ class RecipesRepository(application: Application) {
             categoriesDao.addCategory(categories)
         }
 
-    private val recipesListDao: RecipesListDao = db.recipesListDao()
 
     suspend fun getRecipesListFromCache(categoryId: Int): List<Recipe> =
         withContext(defaultDispatcher) {
@@ -70,8 +37,6 @@ class RecipesRepository(application: Application) {
             val updatedRecipes = recipes.map { it.copy(categoryId = categoryId) }
             recipesListDao.addRecipe(updatedRecipes)
         }
-
-    private val favoritesDao: FavoritesDao = db.favoritesDao()
 
     suspend fun getFavoritesRecipesFromCache() =
         withContext(defaultDispatcher) {
