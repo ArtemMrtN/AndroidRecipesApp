@@ -6,25 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.mrt.androidrecipesapp.RecipesApplication
+import com.mrt.androidrecipesapp.R
 import com.mrt.androidrecipesapp.databinding.FragmentFavoritesBinding
 import com.mrt.androidrecipesapp.ui.recipes.favorites.FavoritesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
 
-    private lateinit var viewModel: FavoritesViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        viewModel = appContainer.favoritesViewModelFactory.create()
-
-    }
+    private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +42,7 @@ class FavoritesFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             if (state.isShowError) {
-                Toast.makeText(requireContext(), "Ошибка загрузки данных", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), R.string.error_load, Toast.LENGTH_LONG).show()
             } else {
                 if (state.recipes.isNullOrEmpty()) {
                     binding.emptyTextView.visibility = View.VISIBLE

@@ -6,28 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mrt.androidrecipesapp.R
-import com.mrt.androidrecipesapp.RecipesApplication
 import com.mrt.androidrecipesapp.data.ImageLoader
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 import com.mrt.androidrecipesapp.ui.recipes.recipes_list.RecipesListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecipesListFragment : Fragment() {
 
     private var _binding: FragmentRecipesListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
 
-    private lateinit var viewModel: RecipesListViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        viewModel = appContainer.recipesListViewModelFactory.create()
-
-    }
+    private val viewModel: RecipesListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +59,7 @@ class RecipesListFragment : Fragment() {
                 "${R.string.item_category_image} ${state.currentCategory?.title}"
 
             if (state.isShowError) {
-                Toast.makeText(requireContext(), "Ошибка загрузки товаров", Toast.LENGTH_LONG)
+                Toast.makeText(requireContext(), R.string.error_load, Toast.LENGTH_LONG)
                     .show()
             } else {
                 (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(

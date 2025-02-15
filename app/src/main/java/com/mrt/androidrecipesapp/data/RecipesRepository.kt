@@ -3,18 +3,20 @@ package com.mrt.androidrecipesapp.data
 import android.util.Log
 import com.mrt.androidrecipesapp.model.Category
 import com.mrt.androidrecipesapp.model.Recipe
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val recipesListDao: RecipesListDao,
     private val categoriesDao: CategoriesDao,
     private val favoritesDao: FavoritesDao,
     private val service: RecipeApiService,
-    private val defaultDispatcher: CoroutineContext,
 ) {
+    private val defaultDispatcher: CoroutineContext = Dispatchers.IO
 
     suspend fun getCategoriesFromCache(): List<Category> =
         withContext(defaultDispatcher) {
