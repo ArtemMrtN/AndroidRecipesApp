@@ -5,10 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mrt.androidrecipesapp.R
+import com.mrt.androidrecipesapp.RecipesApplication
 import com.mrt.androidrecipesapp.data.ImageLoader
 import com.mrt.androidrecipesapp.databinding.FragmentRecipesListBinding
 import com.mrt.androidrecipesapp.ui.recipes.recipes_list.RecipesListViewModel
@@ -18,7 +19,15 @@ class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("binding = null")
 
-    private val viewModel: RecipesListViewModel by viewModels()
+    private lateinit var viewModel: RecipesListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.recipesListViewModelFactory.create()
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +63,15 @@ class RecipesListFragment : Fragment() {
 
             binding.recipesListImage.contentDescription =
                 "${R.string.item_category_image} ${state.currentCategory?.title}"
-            (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(state.recipes ?: emptyList())
+
+            if (state.isShowError) {
+                Toast.makeText(requireContext(), "Ошибка загрузки товаров", Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                (binding.rvRecipesList.adapter as RecipesListAdapter).updateRecipes(
+                    state.recipes ?: emptyList()
+                )
+            }
         }
 
         recipesListAdapter.setOnItemClickListener(object :
@@ -67,7 +84,8 @@ class RecipesListFragment : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
 
-        val action = RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
+        val action =
+            RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
         findNavController().navigate(action)
 
     }
