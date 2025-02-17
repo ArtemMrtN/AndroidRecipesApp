@@ -15,8 +15,8 @@ class RecipesRepository @Inject constructor(
     private val categoriesDao: CategoriesDao,
     private val favoritesDao: FavoritesDao,
     private val service: RecipeApiService,
+    private val defaultDispatcher: CoroutineContext = Dispatchers.IO,
 ) {
-    private val defaultDispatcher: CoroutineContext = Dispatchers.IO
 
     suspend fun getCategoriesFromCache(): List<Category> =
         withContext(defaultDispatcher) {
