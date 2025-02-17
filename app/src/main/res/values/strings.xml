@@ -20,4 +20,6 @@
 
     <string name="category_with_id">Категория с ID</string>
     <string name="no_found">не найдена</string>
+
+    <string name="error_load">Ошибка загрузки данных</string>
 </resources>
