@@ -20,8 +20,8 @@
 ## 🚀 Установка и запуск
 
 1. Клонируйте репозиторий
-git clone [https://github.com/<yourUser>/RecipeMaster.git](https://github.com/ArtemMrtN/AndroidRecipesApp/)
-cd RecipeMaster
+git clone [https://github.com/ArtemMrtN/AndroidRecipesApp/](https://github.com/ArtemMrtN/AndroidRecipesApp/)
+cd AndroidRecipesApp
 
 2. Соберите и установите APK на подключённое устройство / эмулятор
 ./gradlew installDebug
