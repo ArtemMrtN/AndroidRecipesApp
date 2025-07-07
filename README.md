@@ -19,9 +19,8 @@
 
 ## 🚀 Установка и запуск
 
-bash
 1. Клонируйте репозиторий
-git clone https://github.com/<yourUser>/RecipeMaster.git
+git clone [https://github.com/<yourUser>/RecipeMaster.git](https://github.com/ArtemMrtN/AndroidRecipesApp/)
 cd RecipeMaster
 
 2. Соберите и установите APK на подключённое устройство / эмулятор
